@@ -49,9 +49,22 @@ exports.save = function (obj,callback) {
         console.log('save success');
     });
 }
-exports.find = function (query,callback) {
-    Fair.find(query,function(err,docs){
-        callback(err,docs);
+exports.find = function (param,callback) {
+    var page=param.page?param.page:1;
+    var limit=param.limit?param.limit:1;
+    var skip=(page-1)*limit;
+    var query = null;
+    if(param.search){
+        var regex = new RegExp(param.search, 'i');
+        query = Fair.find({'$or': [{chnName: regex},{engName:regex},{position:regex},{hallName:regex}]});
+    }else{
+        query = Fair.find({});
+    }
+    query.limit(limit);
+    query.skip(skip);
+    query.exec(function (err, docs) {
+        console.log(err)
+        callback(err,docs)
     });
 }
 exports.update = function (obj,callback) {
@@ -60,9 +73,9 @@ exports.update = function (obj,callback) {
         console.log(JSON.stringify(docs)+","+err);
     });
 }
-exports.remove = function (id,callback) {
-    var conditions = {_id: id};
-    Fair.remove(conditions,function(err,docs){
+exports.remove = function (query,callback) {
+    Fair.remove(query,function(err,docs){
         console.log(docs);
+        callback(err,docs)
     });
 }
