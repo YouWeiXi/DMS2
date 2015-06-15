@@ -43,6 +43,7 @@ var Fair = mongoose.model("fair", FairSchema);
 exports.save = function (obj,callback) {
     var obj = new Fair(obj);
     obj.save(function(err){
+        console.log(err)
         if (err) {
             callback(err)
         }
