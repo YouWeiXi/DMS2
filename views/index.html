@@ -1,6 +1,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <link rel="stylesheet" href="/stylesheets/bootstrap.css" type="text/css">
     <script src="/javascripts/jquery-2.1.4.min.js"></script>
+    <script src="/javascripts/jquery.form.js"></script>
     <script src="/javascripts/bootstrap.min.js"></script>
     <script src="/javascripts/handlebars-v3.0.3.js"></script>
     <script src="/javascripts/handlebars-jquery.js"></script>
@@ -15,10 +16,10 @@
                 <input class="btn btn-default" type="button" value="查询" id="search-btn">
             </div>
             <div class="form-group">
-                <input class="btn btn-success" type="button" value="添加">
+                <input class="btn btn-success" type="button" value="添加" data-toggle="modal" data-target="#add">
             </div>
             <div class="form-group">
-                <input class="btn btn-warning" type="button" value="导入">
+                <input class="btn btn-warning" type="button" value="导入" id="import-btn">
             </div>
         </form>
         <div id="list"></div>
@@ -44,20 +45,117 @@
             </nav>
         </div>
     </div>
+    <!-- 模态框（Modal） -->
+    <div class="modal fade" id="add" tabindex="-1" role="dialog"
+         aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close"
+                            data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">
+                        添加
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <form id="add-form" class="form-horizontal" role="form">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">名称</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" name="chnName" placeholder="请输入名称">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">英文名</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" name="engName" placeholder="请输入英文名">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">地点</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" name="position" placeholder="请输入地点">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="time" class="col-sm-2 control-label">时间</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="time" placeholder="请输入时间">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">首期年份</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" name="firstYear" placeholder="请输入首期年份">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">大厅</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" name="hallName" placeholder="请输入大厅地点">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="sponsor" class="col-sm-2 control-label">主办方</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="sponsor" placeholder="请输入主办方">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">主办单位</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" name="undertaker" placeholder="请输入主办单位">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">分类</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" name="category" placeholder="请输入分类">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        关闭
+                    </button>
+                    <button type="button" class="btn btn-primary" id="save-btn">
+                        保存
+                    </button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
 </html>
 <script id="list-template" type="text/x-handlebars-template">
     <table class="table table-bordered">
         <thead>
         <tr>
-            <td>a</td>
-            <td>b</td>
+            <td>名称</td>
+            <td>英文名</td>
+            <td>地点</td>
+            <td>时间</td>
+            <td>首期年份</td>
+            <td>大厅</td>
+            <td>主办方</td>
+            <td>主办单位</td>
+            <td>分类</td>
+            <td>网址</td>
             <th>操作</th>
         </tr>
         </thead>
-        {{#each data}}
+        {{#each data.list}}
         <tr id="{{_id}}">
-            <td>{{firstYear}}</td>
             <td>{{chnName}}</td>
+            <td>{{engName}}</td>
+            <td>{{position}}</td>
+            <td>{{time}}</td>
+            <td>{{firstYear}}</td>
+            <td>{{hallName}}</td>
+            <td>{{sponsor}}</td>
+            <td>{{undertaker}}</td>
+            <td>{{category}}</td>
             <td>
                 <a onclick="edit('{{_id}}')"><span class="glyphicon glyphicon-pencil"/></a>&nbsp;&nbsp;&nbsp;&nbsp;
                 <a onclick="del('{{_id}}')"><span class="glyphicon glyphicon-remove"/></a>
@@ -87,7 +185,7 @@
                 var obj = data;
                 if(obj.status=="200"){
                     $('#list').handlebars($('#list-template'), obj);
-                    page(40,'loadPage')
+                    page(obj.data.count,'loadPage')
                 }else{
                     alert('加载失败。')
                 }
@@ -101,5 +199,20 @@
     }
     $('#search-btn').on('click',function(){
         loadPage(1,$('#search').val())
+    })
+    $('#save-btn').on('click',function(){
+        var formdata = new FormData($("#add-form")[0]);
+        $.ajax({
+            type:'POST',
+            url: '/fair/save',
+            data:formdata,
+            contentType:false,
+            processData:false,
+            success: function(data){
+                alert("添加成功");
+                $(this).resetForm(); // 提交后重置表单
+                loadPage(1)
+            }
+        })
     })
 </script>

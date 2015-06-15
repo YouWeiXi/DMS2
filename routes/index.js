@@ -6,7 +6,7 @@ router.get('/', function(req,res){
     res.render('index');
 });
 router.get('/fair/init', fair.init);
-router.get('/fair/save', fair.save);
+router.post('/fair/save', fair.save);
 router.get('/fair/find', fair.find);
 router.get('/fair/remove', fair.remove);
 module.exports = router;

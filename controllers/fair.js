@@ -32,6 +32,7 @@ exports.init=function (req, res) {
     }
 };
 exports.save=function (req, res) {
+    console.log(req)
     fairDao.save(req.body,function(err,list){
         if(err){
             return res.json(response.buildError(err.code));
