@@ -21,7 +21,7 @@ var SponsorSchema = new Schema({
 var FairSchema = new Schema({
     chnName: { type: String },
     engName: { type: String },
-    time: { type: Date },
+    time: { type: String },
     position: { type: String },
     period: { type: Number, min: 0, max: 5, optional: true },
     firstYear: { type: Number, min: 1600, max: 2200, optional: true },
@@ -58,6 +58,7 @@ exports.find = function (param,callback) {
         var skip=(page-1)*limit;
         query.skip(skip);
         query.limit(limit);
+        query.sort({'_id':-1});
         query.exec(function (err, docs) {
             var a={
                 count:count,

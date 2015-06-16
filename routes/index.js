@@ -10,4 +10,5 @@ router.post('/fair/save', fair.save);
 router.post('/fair/update', fair.update);
 router.get('/fair/find', fair.find);
 router.get('/fair/remove', fair.remove);
+router.post('/fair/import', fair.import);
 module.exports = router;
