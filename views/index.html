@@ -1,7 +1,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <link rel="stylesheet" href="/stylesheets/bootstrap.css" type="text/css">
     <script src="/javascripts/jquery-2.1.4.min.js"></script>
-    <script src="/javascripts/jquery.form.js"></script>
+    <script src="/javascripts/jquery-modal-event.js"></script>
     <script src="/javascripts/bootstrap.min.js"></script>
     <script src="/javascripts/handlebars-v3.0.3.js"></script>
     <script src="/javascripts/handlebars-jquery.js"></script>
@@ -16,7 +16,7 @@
                 <input class="btn btn-default" type="button" value="查询" id="search-btn">
             </div>
             <div class="form-group">
-                <input class="btn btn-success" type="button" value="添加" data-toggle="modal" data-target="#add">
+                <input class="btn btn-success" type="button" value="添加" data-toggle="modal" data-target="#edit">
             </div>
             <div class="form-group">
                 <input class="btn btn-warning" type="button" value="导入" id="import-btn">
@@ -26,27 +26,12 @@
         <div class="text-right">
             <nav>
                 <ul class="pagination">
-                    <li>
-                        <a href="#" aria-label="Previous">
-                            <span aria-hidden="true">&laquo;</span>
-                        </a>
-                    </li>
-                    <li><a href="#">1</a></li>
-                    <li class="active"><a href="#">2</a></li>
-                    <li><a href="#">3</a></li>
-                    <li><a href="#">4</a></li>
-                    <li><a href="#">5</a></li>
-                    <li>
-                        <a href="#" aria-label="Next">
-                            <span aria-hidden="true">&raquo;</span>
-                        </a>
-                    </li>
                 </ul>
             </nav>
         </div>
     </div>
     <!-- 模态框（Modal） -->
-    <div class="modal fade" id="add" tabindex="-1" role="dialog"
+    <div class="modal fade" id="edit" tabindex="-1" role="dialog"
          aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -55,7 +40,7 @@
                             data-dismiss="modal" aria-hidden="true">
                         &times;
                     </button>
-                    <h4 class="modal-title" id="myModalLabel">
+                    <h4 class="modal-title" id="modalLabel">
                         添加
                     </h4>
                 </div>
@@ -64,6 +49,7 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label">名称</label>
                             <div class="col-sm-10">
+                                <input type="text" class="form-control hide" id="_id">
                                 <input type="text" class="form-control" id="chnName" placeholder="请输入名称">
                             </div>
                         </div>
@@ -131,8 +117,9 @@
                         保存
                     </button>
                 </div>
-            </div><!-- /.modal-content -->
-        </div><!-- /.modal -->
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
 </html>
 <script id="list-template" type="text/x-handlebars-template">
     <table class="table table-bordered">
@@ -153,18 +140,18 @@
         </thead>
         {{#each data.list}}
         <tr id="{{_id}}">
-            <td>{{chnName}}</td>
-            <td>{{engName}}</td>
-            <td>{{position}}</td>
-            <td>{{time}}</td>
-            <td>{{firstYear}}</td>
-            <td>{{hallName}}</td>
-            <td>{{sponsor}}</td>
-            <td>{{undertaker}}</td>
-            <td>{{category}}</td>
-            <td>{{website}}</td>
+            <td id="chnName{{_id}}">{{chnName}}</td>
+            <td id="engName{{_id}}">{{engName}}</td>
+            <td id="position{{_id}}">{{position}}</td>
+            <td id="time{{_id}}">{{time}}</td>
+            <td id="firstYear{{_id}}">{{firstYear}}</td>
+            <td id="hallName{{_id}}">{{hallName}}</td>
+            <td id="sponsor{{_id}}">{{sponsor}}</td>
+            <td id="undertaker{{_id}}">{{undertaker}}</td>
+            <td id="category{{_id}}">{{category}}</td>
+            <td id="website{{_id}}">{{website}}</td>
             <td>
-                <a onclick="edit('{{_id}}')"><span class="glyphicon glyphicon-pencil"/></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                <a onclick="edit('{{_id}}')"><span class="glyphicon glyphicon-pencil" data-toggle="modal" data-target="#edit"/></a>&nbsp;&nbsp;&nbsp;&nbsp;
                 <a onclick="del('{{_id}}')"><span class="glyphicon glyphicon-remove"/></a>
             </td>
         </tr>
@@ -204,30 +191,66 @@
             $('#'+id).remove()
         });
     }
+    function edit(id){
+        $('#_id').val(id);
+        $('#chnName').val($('#chnName'+id).html());
+        $('#engName').val($('#engName'+id).html());
+        $('#position').val($('#position'+id).html());
+        $('#time').val($('#time'+id).html());
+        $('#firstYear').val($('#firstYear'+id).html());
+        $('#hallName').val($('#hallName'+id).html());
+        $('#sponsor').val($('#sponsor'+id).html());
+        $('#undertaker').val($('#undertaker'+id).html());
+        $('#category').val($('#category'+id).html());
+        $('#website').val($('#website'+id).html());
+    }
     $('#search-btn').on('click',function(){
         loadPage(1,$('#search').val())
     })
     $('#save-btn').on('click',function(){
+        var id=$('#_id').val();
+        var url='/fair/save';
+        var param={
+            chnName:$('#chnName').val(),
+            engName:$('#engName').val(),
+            position:$('#position').val(),
+            time:$('#time').val(),
+            firstYear:$('#firstYear').val(),
+            hallName:$('#hallName').val(),
+            sponsor:$('#sponsor').val(),
+            undertaker:$('#undertaker').val(),
+            category:$('#category').val(),
+            website:$('#website').val()
+        };
+        if(id){
+            url='/fair/update';
+            param._id=id;
+            $('#modalLabel').html('更新')
+        }else{
+            $('#modalLabel').html('添加')
+        }
         $.ajax({
             type:'POST',
-            url: '/fair/save',
-            data:{
-                chnName:$('#chnName').val(),
-                engName:$('#engName').val(),
-                position:$('#position').val(),
-                time:$('#time').val(),
-                firstYear:$('#firstYear').val(),
-                hallName:$('#hallName').val(),
-                sponsor:$('#sponsor').val(),
-                undertaker:$('#undertaker').val(),
-                category:$('#category').val(),
-                website:$('#website').val()
-            },
+            url: url,
+            data:param,
             success: function(data){
-                alert("添加成功");
-                $("#add").modal("hide")
+                alert("保存成功");
+                $("#edit").modal("hide")
                 loadPage(1)
             }
         })
     })
+    $('#edit').on('hide', function() {
+        $('#_id').val('');
+        $('#chnName').val('');
+        $('#engName').val('');
+        $('#position').val('');
+        $('#time').val('');
+        $('#firstYear').val('');
+        $('#hallName').val('');
+        $('#sponsor').val('');
+        $('#undertaker').val('');
+        $('#category').val('');
+        $('#website').val('');
+    });
 </script>

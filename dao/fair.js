@@ -70,17 +70,19 @@ exports.find = function (param,callback) {
 var createQuery = function(param){
     var query = null;
     if(param.search){
-        var regex = new RegExp(c.search, 'i');
+        var regex = new RegExp(param.search, 'i');
         query = Fair.find({'$or': [{chnName: regex},{engName:regex},{position:regex},{hallName:regex}]});
     }else{
         query = Fair.find({});
     }
     return query;
 }
-exports.update = function (obj,callback) {
+exports. update = function (obj,callback) {
+    var id=obj._id;
+    delete obj._id;
     var update = { $set: obj}, options = {};
-    Fair.update({_id:obj.id},update,options,function(err,docs){
-        console.log(JSON.stringify(docs)+","+err);
+    Fair.update({_id:id},update,options,function(err,docs){
+        callback(err,docs)
     });
 }
 exports.remove = function (query,callback) {

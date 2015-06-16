@@ -7,6 +7,7 @@ router.get('/', function(req,res){
 });
 router.get('/fair/init', fair.init);
 router.post('/fair/save', fair.save);
+router.post('/fair/update', fair.update);
 router.get('/fair/find', fair.find);
 router.get('/fair/remove', fair.remove);
 module.exports = router;

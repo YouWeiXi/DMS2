@@ -48,9 +48,10 @@ exports.find=function (req, res) {
     });
 };
 exports.update=function (req, res) {
-    fairDao.update(req.query,function(err,list){
+    fairDao.update(req.body,function(err,list){
         if(err){
-            return res.json(response.buildError(err.code));
+            console.log(err)
+            return res.json(response.buildError(err));
         }
         res.json(response.buildOK());
     });
