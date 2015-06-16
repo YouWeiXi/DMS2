@@ -226,6 +226,7 @@
         });
     }
     function edit(id){
+        $('#modalLabel').html('更新')
         $('#_id').val(id);
         $('#chnName').val($('#chnName'+id).html());
         $('#engName').val($('#engName'+id).html());
@@ -259,7 +260,6 @@
         if(id){
             url='/fair/update';
             param._id=id;
-            $('#modalLabel').html('更新')
         }else{
             $('#modalLabel').html('添加')
         }
@@ -290,6 +290,7 @@
         })
     })
     $('#edit').on('hide', function() {
+        $('#modalLabel').html('添加')
         $('#_id').val('');
         $('#chnName').val('');
         $('#engName').val('');
