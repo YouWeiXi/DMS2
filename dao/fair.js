@@ -8,7 +8,14 @@ var Schema = mongoose.Schema,
 var AdSchema = new Schema({
     name: { type: String },
     url: { type: String},
-    pic: { type: [String], optional: true }
+    pic: { type: String, label: "Advertisement Logo" },
+    tags: { type: [String], optional: true },
+    type: { type: String, allowedValues: ["agent", "builder", "transport"]},
+    contact: { type: String, optional: true },
+    tel: { type: String, optional: true },
+    fax: { type: String, optional: true },
+    email: { type: String, optional: true },
+    qq: { type: Number, optional: true }
 });
 
 var SponsorSchema = new Schema({
@@ -69,7 +76,7 @@ exports.find = function (param,callback) {
     });
 }
 var createQuery = function(param){
-    var query = null;
+    var query = null;//获取这个用户当前可送能量
     if(param.search){
         var regex = new RegExp(param.search, 'i');
         query = Fair.find({'$or': [{chnName: regex},{engName:regex},{position:regex},{hallName:regex}]});

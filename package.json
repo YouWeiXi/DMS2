@@ -16,6 +16,8 @@
     "serve-favicon": "~2.2.1",
     "path": "~0.11.14 ",
     "formidable": "~1.0.17",
-    "node-xlsx": "~0.5.1"
+    "node-xlsx": "~0.5.1",
+    "express-session":"*",
+    "express-partials":"*"
   }
 }

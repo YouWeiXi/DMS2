@@ -1,0 +1,69 @@
+﻿<html xmlns="http://www.w3.org/1999/xhtml">
+<link rel="stylesheet" href="/stylesheets/bootstrap.css">
+<script src="/javascripts/jquery-2.1.4.min.js"></script>
+<script src="/javascripts/jquery-modal-event.js"></script>
+<script src="/javascripts/bootstrap.min.js"></script>
+<script src="/javascripts/handlebars-v3.0.3.js"></script>
+<script src="/javascripts/handlebars-jquery.js"></script>
+<style type="text/css">
+    body {
+        padding-top: 40px;
+        padding-bottom: 40px;
+    }
+</style>
+<body>
+    <div class="container">
+        <nav class="navbar navbar-default navbar-inverse">
+            <div class="container-fluid">
+                <!-- Brand and toggle get grouped for better mobile display -->
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="/">首页</a>
+                </div>
+                <!-- class="active"-->
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                    <ul class="nav navbar-nav" id="menu">
+
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        <% if (!locals.user) { %>
+                        <li><a href="/login">登入</a></li>
+                        <li><a href="/login"> 注册</a></li>
+                        <% } else { %>
+                        <li><a>欢迎您,<%= locals.user.username %></a></li>
+                        <li><a href="/logout">  登出</a></li>
+                        <% } %>
+                    </ul>
+                </div><!-- /.navbar-collapse -->
+            </div><!-- /.container-fluid -->
+        </nav>
+    </div>
+    <div class="container">
+        <%- body %>
+        <footer>
+            <p><a href="http://www.newfairs.com/" target="_blank">New Fairs</a> 2015</p>
+        </footer>
+    </div>
+</body>
+<script id="menu-template" type="text/x-handlebars-template">
+    {{#each this}}
+        <li><a href={{href}}>{{label}}</a></li>
+    {{/each}}
+</script>
+<script>
+    loadMenu();
+    function loadMenu(){
+        $.ajax({
+            type : "GET",
+            url : "/menu",
+            success: function(data) {
+                var obj = data;
+                if(obj.status=="200"){
+                    $('#menu').handlebars($('#menu-template'), obj.data);
+                }else{
+                    alert('加载失败。')
+                }
+            }
+        });
+    }
+</script>
+</html>
