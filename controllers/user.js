@@ -25,6 +25,7 @@ exports.login=function (req, res) {
     });
 };
 exports.find=function (req, res) {
+    console.log("Aaaaaaaaaaa")
     userDao.find(req.query,function(err,list){
         if(err){
             return res.json(response.buildError(err));
