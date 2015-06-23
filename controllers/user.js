@@ -17,15 +17,11 @@ exports.login=function (req, res) {
         if(err){
             return res.json(response.buildError(err));
         }
-        console.log('********')
-        console.log(list)
-        console.log('********')
         req.session.user = list;
         res.json(response.buildOK(list));
     });
 };
 exports.find=function (req, res) {
-    console.log("Aaaaaaaaaaa")
     userDao.find(req.query,function(err,list){
         if(err){
             return res.json(response.buildError(err));
