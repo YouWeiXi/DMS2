@@ -5,32 +5,6 @@ var roleDao = require('../dao/role');
 var response = require('../common/response');
 var path 	   = require('path');
 var config = require('../config').config;
-//exports.init=function (req, res) {
-//    userDao.save({
-//        chnName: i++,
-//        engName: 'a',
-//        time: new Date(),
-//        position: 'a',
-//        period: 2,
-//        firstYear: 1987,
-//        hallName: 'a',
-//        sponsors: {},
-//        undertakers: {},
-//        categories: 'a',
-//        lastYearInfo: 'a',
-//        exhibitionAgent: 'a',
-//        setupAgent: 'a',
-//        shippingAgent: 'a',
-//        website: 'a',
-//        logo: 'a',
-//        advertisement: {}
-//    },function(err,list){
-//        if(err){
-//            return res.json(response.buildError(err.code));
-//        }
-//        res.json(response.buildOK());
-//    });
-//};
 exports.save=function (req, res) {
     roleDao.save(req.body,function(err,list){
         if(err){

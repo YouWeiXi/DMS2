@@ -16,6 +16,12 @@ router.get('/login', function(req,res){
 router.get('/role', function(req,res){
     res.render('role');
 });
+router.get('/user', function(req,res){
+    res.render('user');
+});
+router.get('/personal', function(req,res){
+    res.render('personal');
+});
 router.get('/menu', user.menu);
 router.get('/fair/init', fair.init);
 router.post('/fair/save', fair.save);
@@ -26,6 +32,9 @@ router.post('/fair/import', fair.import);
 
 router.post('/user/reg', user.reg);
 router.post('/user/login', user.login);
+router.post('/user/find', user.find);
+router.post('/user/update', user.update);
+router.post('/user/remove', user.remove);
 
 router.post('/role/save', role.save);
 router.post('/role/update', role.update);

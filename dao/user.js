@@ -31,7 +31,7 @@ exports.update = function (obj,callback) {
     var id=obj._id;
     delete obj._id;
     var update = { $set: obj}, options = {};
-    Fair.update({_id:id},update,options,function(err,docs){
+    User.update({_id:id},update,options,function(err,docs){
         callback(err,docs)
     });
 }
@@ -40,4 +40,33 @@ exports.remove = function (query,callback) {
         console.log(docs);
         callback(err,docs)
     });
+}
+exports.find = function (param,callback) {
+    createQuery(param).count(function (err, count) {
+        var page=param.page?param.page:1;
+        var query=createQuery(param);
+        var limit=param.limit?param.limit:15;
+        var skip=(page-1)*limit;
+        query.skip(skip);
+        query.limit(limit);
+        query.sort({'_id':-1});
+        query.exec(function (err, docs) {
+            var a={
+                count:count,
+                list:docs
+            }
+            console.log(err)
+            callback(err,a)
+        });
+    });
+}
+var createQuery = function(param){
+    var query = null;
+    if(param.search){
+        var regex = new RegExp(param.search, 'i');
+        query = User.find({'$or': [{username: regex}]});
+    }else{
+        query = User.find({});
+    }
+    return query;
 }

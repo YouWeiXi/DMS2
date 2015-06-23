@@ -24,6 +24,14 @@ exports.login=function (req, res) {
         res.json(response.buildOK(list));
     });
 };
+exports.find=function (req, res) {
+    userDao.find(req.query,function(err,list){
+        if(err){
+            return res.json(response.buildError(err));
+        }
+        res.json(response.buildOK(list));
+    });
+};
 exports.update=function (req, res) {
     userDao.update(req.body,function(err,list){
         if(err){
@@ -46,8 +54,8 @@ exports.menu=function (req, res) {
         {label:'展会管理',href:'/fair'},
         {label:'广告管理',href:'#'},
         {label:'角色管理',href:'/role'},
-        {label:'用户管理',href:'#'},
-        {label:'个人中心',href:'#'}
+        {label:'用户管理',href:'/user'},
+        {label:'个人中心',href:'/personal'}
     ]
     res.json(response.buildOK(items));
 };

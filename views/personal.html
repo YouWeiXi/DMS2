@@ -1,0 +1,31 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <script src="/javascripts/page.js"></script>
+    <div class="container">
+        <p></p>
+        <form class="form-inline">
+            <div class="form-group">
+                <input class="btn btn-default" type="button" value="修改密码" id="search-btn">
+            </div>
+            <div class="form-group">
+                <input class="btn btn-success" type="button" value="修改资料">
+            </div>
+        </form>
+        <div id="list"></div>
+        <div class="text-right">
+            <nav>
+                <ul class="pagination">
+                </ul>
+            </nav>
+        </div>
+    </div>
+</html>
+<script>
+    function edit(id){
+        $('#_id').val(id);
+        $('#roleName').val($('#roleName'+id).html());
+    }
+    $('#edit').on('hide', function() {
+        $('#_id').val('');
+        $('#roleName').val('');
+    });
+</script>
