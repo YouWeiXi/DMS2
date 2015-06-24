@@ -76,7 +76,7 @@ exports.find = function (param,callback) {
     });
 }
 var createQuery = function(param){
-    var query = null;//获取这个用户当前可送能量
+    var query = null;
     if(param.search){
         var regex = new RegExp(param.search, 'i');
         query = Fair.find({'$or': [{chnName: regex},{engName:regex},{position:regex},{hallName:regex}]});
