@@ -2,21 +2,20 @@
  * Created by zoey on 2015/6/11.
  */
 var mongoose = require('mongoose');
-var Schema = mongoose.Schema,
-    ObjectId = Schema.ObjectId;
-
-var AdSchema = new Schema({
-    name: { type: String },
-    url: { type: String},
-    pic: { type: String, label: "Advertisement Logo" },
-    tags: { type: [String], optional: true },
-    type: { type: String, allowedValues: ["agent", "builder", "transport"]},
-    contact: { type: String, optional: true },
-    tel: { type: String, optional: true },
-    fax: { type: String, optional: true },
-    email: { type: String, optional: true },
-    qq: { type: Number, optional: true }
-});
+var Schema = mongoose.Schema;
+//    ObjectId = Schema.ObjectId;
+//var AdSchema = new Schema({
+//    name: { type: String },
+//    url: { type: String},
+//    pic: { type: String, label: "Advertisement Logo" },
+//    tags: { type: [String], optional: true },
+//    type: { type: String, allowedValues: ["agent", "builder", "transport"]},
+//    contact: { type: String, optional: true },
+//    tel: { type: String, optional: true },
+//    fax: { type: String, optional: true },
+//    email: { type: String, optional: true },
+//    qq: { type: Number, optional: true }
+//});
 
 var SponsorSchema = new Schema({
     name: { type: String },
@@ -37,12 +36,9 @@ var FairSchema = new Schema({
     undertakers: { type: [SponsorSchema], optional: true },
     categories: { type: [String], optional: true },
     lastYearInfo: { type: String, optional: true },
-    exhibitionAgent: { type: String, optional: true },
-    setupAgent: { type: String, optional: true },
-    shippingAgent: { type: String, optional: true },
     website: { type: String, optional: true },
-    logo: { type: String, optional: true },
-    advertisement: { type: [AdSchema], optional: true }
+    logo: { type: String, label: "Fair Logo", optional: true },
+    advertisement: { type: mongoose.Schema.Types.ObjectId, label: "Advertisement ID", optional: true }
 });
 
 var Fair = mongoose.model("fair", FairSchema);
@@ -79,7 +75,7 @@ var createQuery = function(param){
     var query = null;
     if(param.search){
         var regex = new RegExp(param.search, 'i');
-        query = Fair.find({'$or': [{chnName: regex},{engName:regex},{position:regex},{hallName:regex}]});
+        query = Fair.find({'$or': [{chnName: regex},{engName:regex},{position:regex},{time:regex}]});
     }else{
         query = Fair.find({});
     }

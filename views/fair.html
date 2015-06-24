@@ -39,7 +39,18 @@
                     </h4>
                 </div>
                 <div class="modal-body">
-                    <form id="add-form" class="form-horizontal" role="form">
+                    <form id="add-form" class="form-horizontal" role="form" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Logo</label>
+                            <div class="col-sm-10">
+                                <input type="file"  name="logofile" id="logofile"/>
+                            </div>
+                            <div id="previewdiv" class="col-xs-6 col-md-3 hide">
+                                <a href="#" class="thumbnail">
+                                    <img id="preview" src=""  alt="">
+                                </a>
+                            </div>
+                        </div>
                         <div class="form-group">
                             <label class="col-sm-2 control-label">名称</label>
                             <div class="col-sm-10">
@@ -154,6 +165,7 @@
         <thead>
         <tr>
             <td>名称</td>
+            <td>Logo</td>
             <td>英文名</td>
             <td>地点</td>
             <td>时间</td>
@@ -169,6 +181,15 @@
         {{#each data.list}}
         <tr id="{{_id}}">
             <td id="chnName{{_id}}">{{chnName}}</td>
+            <td id="logo{{_id}}">
+                {{#if logo}}
+                <div class="col-xs-6 col-md-6">
+                    <a href="#" class="thumbnail">
+                        <img src="/user_data/{{logo}}">
+                    </a>
+                </div>
+                {{/if}}
+            </td>
             <td id="engName{{_id}}">{{engName}}</td>
             <td id="position{{_id}}">{{position}}</td>
             <td id="time{{_id}}">{{time}}</td>
@@ -257,10 +278,16 @@
         }else{
             $('#modalLabel').html('添加')
         }
+        var formdata = new FormData($("#add-form")[0]);
+        for(var k in param){
+            formdata.append(k, param[k]);
+        }
         $.ajax({
             type:'POST',
             url: url,
-            data:param,
+            data:formdata,
+            processData: false,
+            contentType: false,
             success: function(data){
                 alert("保存成功");
                 $("#edit").modal("hide")
@@ -296,5 +323,11 @@
         $('#undertaker').val('');
         $('#category').val('');
         $('#website').val('');
+    });
+    $('#logofile').on('change', function() {
+        var f = document.getElementById("logofile").files[0];
+        var src = window.URL.createObjectURL(f);
+        $('#previewdiv').addClass('show')
+        $('#preview').attr('src',src);
     });
 </script>
