@@ -25,6 +25,7 @@ router.post('/fair/update', fair.update);
 router.get('/fair/find', fair.find);
 router.get('/fair/remove', fair.remove);
 router.post('/fair/import', fair.import);
+router.get('/fair/findName', fair.findName);
 
 router.post('/user/reg', user.reg);
 router.post('/user/login', user.login);

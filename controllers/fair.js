@@ -186,3 +186,11 @@ exports.import = function(req, res) {
         }
     });
 };
+exports.findName=function (req, res) {
+    fairDao.findName(function(err,list){
+        if(err){
+            return res.json(response.buildError(err));
+        }
+        res.json(response.buildOK(list));
+    });
+};

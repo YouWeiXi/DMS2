@@ -95,3 +95,9 @@ exports.remove = function (query,callback) {
         callback(err,docs)
     });
 }
+exports.findName = function (callback) {
+    Fair.find({}, '_id chnName engName', function (err, docs) {
+        console.log(docs)
+        callback(err,docs)
+    })
+}

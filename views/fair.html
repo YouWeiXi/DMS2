@@ -237,7 +237,7 @@
         });
     }
     function ad(id){
-        location.href="/ad/byfair?id="+id;
+        location.href="/ad?fairId="+id;
     }
     function del(id){
         $.get("/fair/remove",{_id:id}, function(result){
