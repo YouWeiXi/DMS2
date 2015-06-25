@@ -37,8 +37,8 @@ var FairSchema = new Schema({
     categories: { type: [String], optional: true },
     lastYearInfo: { type: String, optional: true },
     website: { type: String, optional: true },
-    logo: { type: String, label: "Fair Logo", optional: true },
-    advertisement: { type: mongoose.Schema.Types.ObjectId, label: "Advertisement ID", optional: true }
+    logo: { type: String, label: "Fair Logo", optional: true }
+    //advertisement: { type: mongoose.Schema.Types.ObjectId, label: "Advertisement ID", optional: true }
 });
 
 var Fair = mongoose.model("fair", FairSchema);

@@ -1,0 +1,163 @@
+<div class="modal fade" id="ad_edit" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close"
+                        data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 id="adModalLabel" class="modal-title">
+                    广告添加
+                </h4>
+            </div>
+            <div class="modal-body">
+                <form id="add-form" class="form-horizontal" role="form" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Logo</label>
+                        <div class="col-sm-10">
+                            <input type="file"  name="adlogofile" id="adlogofile"/>
+                        </div>
+                        <div id="ad-previewdiv" class="col-xs-6 col-md-3 hide">
+                            <a href="#" class="thumbnail">
+                                <img id="ad-preview" src=""  alt="">
+                            </a>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">名称</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control hide" id="_id">
+                            <input type="text" class="form-control" id="name" placeholder="请输入广告名称">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">URL</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="url" placeholder="请输入URL">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">标签</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="tags" placeholder="请输入广告标签">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">类型</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="type" placeholder="请输入广告类型">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">联系人</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="contact" placeholder="请输入广告内容">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">电话</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="tel" placeholder="请输入联系电话">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">传真</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="fax" placeholder="请输入传真">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Email</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="email" placeholder="请输入Email">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">QQ</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="qq" placeholder="请输入QQ">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">
+                    关闭
+                </button>
+                <button type="button" class="btn btn-primary" id="ad-save-btn">
+                    保存
+                </button>
+            </div>
+        </div>
+    </div><!-- /.modal-content -->
+</div><!-- /.modal -->
+
+<script>
+    function edit(id){
+        $('#adModalLabel').html('广告更新')
+        $('#_id').val(id);
+        $('#name').val($('#name'+id).html());
+        $('#contact').val($('#contact'+id).html());
+        $('#tags').val($('#tags'+id).html());
+        $('#type').val($('#type'+id).html());
+        $('#url').val($('#url'+id).html());
+        $('#tel').val($('#tel'+id).html());
+        $('#fax').val($('#fax'+id).html());
+        $('#email').val($('#email'+id).html());
+        $('#qq').val($('#qq'+id).html());
+    }
+    $('#ad_edit').on('hide', function() {
+        $('#adModalLabel').html('广告添加')
+        $('#_id').val('');
+        $('#name').val('');
+        $('#contact').val('');
+        $('#tags').val('');
+        $('#type').val('');
+        $('#url').val('');
+        $('#tel').val('');
+        $('#fax').val('');
+        $('#email').val('');
+        $('#qq').val('');
+    });
+    $('#ad-save-btn').on('click',function(){
+        var id=$('#_id').val();
+        var url='/ad/save';
+        var param={
+            name:$('#name').val(),
+            contact:$('#contact').val(),
+            tags:$('#tags').val(),
+            type:$('#type').val(),
+            url:$('#url').val(),
+            tel:$('#tel').val(),
+            fax:$('#fax').val(),
+            email:$('#email').val(),
+            qq:$('#qq').val()
+        };
+        if(id){
+            url='/ad/update';
+            param._id=id;
+        }
+        var formdata = new FormData($("#add-form")[0]);
+        for(var k in param){
+            formdata.append(k, param[k]);
+        }
+        $.ajax({
+            type:'POST',
+            url: url,
+            data:formdata,
+            processData: false,
+            contentType: false,
+            success: function(data){
+                alert("保存成功");
+                $("#ad_edit").modal("hide")
+                loadPage(1)
+            }
+        })
+    })
+    $('#adlogofile').on('change', function() {
+        var f = document.getElementById("adlogofile").files[0];
+        var src = window.URL.createObjectURL(f);
+        $('#ad-previewdiv').addClass('show')
+        $('#ad-preview').attr('src',src);
+    });
+</script>

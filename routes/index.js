@@ -3,29 +3,21 @@ var router = express.Router();
 var fair = require('../controllers/fair');
 var user = require('../controllers/user');
 var role = require('../controllers/role');
+var ad = require('../controllers/ad');
 /* GET home page. */
-router.get('/', function(req,res){
-    res.render('index');
-});
-router.get('/fair', function(req,res){
-    res.render('fair');
-});
-router.get('/login', function(req,res){
-    res.render('login');
-});
+router.get('/', function(req,res){ res.render('index');});
+router.get('/fair', function(req,res){ res.render('fair');});
+router.get('/login', function(req,res){ res.render('login');});
+router.get('/role', function(req,res){res.render('role');});
+router.get('/user', function(req,res){res.render('user');});
+router.get('/personal', function(req,res){res.render('personal');});
+router.get('/ad', function(req,res){res.render('ad');});
+router.get('/adedit', function(req,res){res.render('ad_edit',{layout:false});});
 router.get('/logout', function(req,res){
     req.session.user =  null;
     res.redirect('/login');
 });
-router.get('/role', function(req,res){
-    res.render('role');
-});
-router.get('/user', function(req,res){
-    res.render('user');
-});
-router.get('/personal', function(req,res){
-    res.render('personal');
-});
+
 router.get('/menu', user.menu);
 router.get('/fair/init', fair.init);
 router.post('/fair/save', fair.save);
@@ -44,4 +36,9 @@ router.post('/role/save', role.save);
 router.post('/role/update', role.update);
 router.get('/role/find', role.find);
 router.get('/role/remove', role.remove);
+
+router.post('/ad/save', ad.save);
+router.post('/ad/update', ad.update);
+router.get('/ad/find', ad.find);
+router.get('/ad/remove', ad.remove);
 module.exports = router;

@@ -51,7 +51,7 @@ exports.menu=function (req, res) {
     if(req.session.user){
         items=[
             {label:'展会管理',href:'/fair'},
-            {label:'广告管理',href:'#'},
+            {label:'广告管理',href:'/ad'},
             {label:'角色管理',href:'/role'},
             {label:'用户管理',href:'/user'},
             {label:'个人中心',href:'/personal'}

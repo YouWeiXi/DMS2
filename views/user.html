@@ -10,7 +10,16 @@
                 <input class="btn btn-default" type="button" value="查询" id="search-btn">
             </div>
         </form>
-        <div id="list"></div>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <td>用户名</td>
+                    <td>角色</td>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody id="list"></tbody>
+        </table>
         <div class="text-right">
             <nav>
                 <ul class="pagination">
@@ -56,25 +65,16 @@
     </div><!-- /.modal -->
 </html>
 <script id="list-template" type="text/x-handlebars-template">
-    <table class="table table-bordered">
-        <thead>
-        <tr>
-            <td>用户名</td>
-            <td>角色</td>
-            <th>操作</th>
-        </tr>
-        </thead>
-        {{#each data.list}}
-        <tr id="{{_id}}">
-            <td id="username{{_id}}">{{username}}</td>
-            <td id="roleName{{_id}}">{{roleName}}</td>
-            <td>
-                <a onclick="edit('{{_id}}')"><span class="glyphicon glyphicon-pencil" data-toggle="modal" data-target="#edit"/></a>&nbsp;&nbsp;&nbsp;&nbsp;
-                <a onclick="del('{{_id}}')"><span class="glyphicon glyphicon-remove"/></a>
-            </td>
-        </tr>
-        {{/each}}
-    </table>
+    {{#each data.list}}
+    <tr id="{{_id}}">
+        <td id="username{{_id}}">{{username}}</td>
+        <td id="roleName{{_id}}">{{roleName}}</td>
+        <td>
+            <a onclick="edit('{{_id}}')"><span class="glyphicon glyphicon-pencil" data-toggle="modal" data-target="#edit"/></a>&nbsp;&nbsp;&nbsp;&nbsp;
+            <a onclick="del('{{_id}}')"><span class="glyphicon glyphicon-remove"/></a>
+        </td>
+    </tr>
+    {{/each}}
 </script>
 <script>
     loadPage()
