@@ -4,18 +4,6 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 //    ObjectId = Schema.ObjectId;
-//var AdSchema = new Schema({
-//    name: { type: String },
-//    url: { type: String},
-//    pic: { type: String, label: "Advertisement Logo" },
-//    tags: { type: [String], optional: true },
-//    type: { type: String, allowedValues: ["agent", "builder", "transport"]},
-//    contact: { type: String, optional: true },
-//    tel: { type: String, optional: true },
-//    fax: { type: String, optional: true },
-//    email: { type: String, optional: true },
-//    qq: { type: Number, optional: true }
-//});
 
 var SponsorSchema = new Schema({
     name: { type: String },
@@ -23,7 +11,6 @@ var SponsorSchema = new Schema({
     fax: { type: String },
     email: { type: String}
 });
-
 var FairSchema = new Schema({
     chnName: { type: String },
     engName: { type: String },
@@ -37,8 +24,13 @@ var FairSchema = new Schema({
     categories: { type: [String], optional: true },
     lastYearInfo: { type: String, optional: true },
     website: { type: String, optional: true },
-    logo: { type: String, label: "Fair Logo", optional: true }
-    //advertisement: { type: mongoose.Schema.Types.ObjectId, label: "Advertisement ID", optional: true }
+    logo: { type: String, label: "Fair Logo", optional: true },
+    advertisement: {
+        agent: [{ type: Schema.Types.ObjectId, ref: 'advertisement' }],
+        builder: [{ type: Schema.Types.ObjectId, ref: 'advertisement' }],
+        transport: [{ type: Schema.Types.ObjectId, ref: 'advertisement' }]
+    }
+//    advertisement: { type: [mongoose.Schema.Types.ObjectId], label: "Advertisement ID", optional: true }
 });
 
 var Fair = mongoose.model("fair", FairSchema);
