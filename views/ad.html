@@ -1,6 +1,5 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <link rel="stylesheet" href="/stylesheets/bootstrap-select.min.css">
-    <script src="/javascripts/page.js"></script>
     <script src="/javascripts/bootstrap-select.min.js"></script>
     <script src="/javascripts/jquery-util.js"></script>
     <div class="container">
@@ -8,7 +7,10 @@
         <form class="form-inline">
             <div class="form-group">
                 <select class="selectpicker" data-style="btn-warning">
-                    <option value=''>--请选择展会--</option>
+                    <option value=''>全部类型</option>
+                    <option value='agent'>代理公司</option>
+                    <option value='builder'>设计搭建公司</option>
+                    <option value='transport'>物流公司</option>
                 </select>
             </div>
             <div class="form-group">
@@ -24,7 +26,8 @@
         <table class="table table-bordered">
             <thead>
                 <tr>
-                    <td></td>
+                    <td>分类</td>
+                    <td>Logo</td>
                     <td>名称</td>
                     <td>URL</td>
                     <td>标签</td>
@@ -47,78 +50,73 @@
     </div>
     <div class="ad_edit"></div>
 </html>
-<script id="list-template" type="text/x-handlebars-template">
-        {{#each data.list}}
+<script id="template" type="text/x-handlebars-template">
+    {{#each agent}}
         <tr id="{{_id}}">
-            <td id="pic{{_id}}">
-                {{#if pic}}
-                <div class="col-xs-6 col-md-6">
-                    <a href="#" class="thumbnail">
-                        <img src="/user_data/{{pic}}">
-                    </a>
-                </div>
-                {{/if}}
-            </td>
-            <td id="name{{_id}}">{{name}}</td>
-            <td id="url{{_id}}">{{url}}</td>
-            <td id="tags{{_id}}">{{tags}}</td>
-            <td id="contact{{_id}}">{{contact}}</td>
-            <td id="tel{{_id}}">{{tel}}</td>
-            <td id="fax{{_id}}">{{fax}}</td>
-            <td id="email{{_id}}">{{email}}</td>
-            <td id="qq{{_id}}">{{qq}}</td>
-            <td>
-                <a onclick="edit('{{_id}}')"><span class="glyphicon glyphicon-pencil" data-toggle="modal" data-target="#ad_edit"/></a>&nbsp;&nbsp;&nbsp;&nbsp;
-                <a onclick="del('{{_id}}')"><span class="glyphicon glyphicon-remove"/></a>
-            </td>
+            <td id="type{{_id}}">代理公司</td>
+            {{>detail}}
         </tr>
-        {{/each}}
+    {{/each}}
+    {{#each builder}}
+        <tr id="{{_id}}">
+            <td id="type{{_id}}">设计搭建公司</td>
+            {{>detail}}
+        </tr>
+    {{/each}}
+    {{#each transport}}
+        <tr id="{{_id}}">
+            <td id="type{{_id}}">物流公司</td>
+            {{>detail}}
+        </tr>
+    {{/each}}
+</script>
+<script id="list-template" type="text/x-handlebars-template">
+
+        <td id="pic{{_id}}">
+            {{#if pic}}
+            <div class="col-xs-6 col-md-6">
+                <a href="#" class="thumbnail">
+                    <img src="/user_data/{{pic}}">
+                </a>
+            </div>
+            {{/if}}
+        </td>
+        <td id="name{{_id}}">{{name}}</td>
+        <td id="url{{_id}}">{{url}}</td>
+        <td id="tags{{_id}}">{{tags}}</td>
+        <td id="contact{{_id}}">{{contact}}</td>
+        <td id="tel{{_id}}">{{tel}}</td>
+        <td id="fax{{_id}}">{{fax}}</td>
+        <td id="email{{_id}}">{{email}}</td>
+        <td id="qq{{_id}}">{{qq}}</td>
+        <td>
+            <a onclick="edit('{{_id}}')"><span class="glyphicon glyphicon-pencil" data-toggle="modal" data-target="#ad_edit"/></a>&nbsp;&nbsp;&nbsp;&nbsp;
+            <a onclick="del('{{_id}}')"><span class="glyphicon glyphicon-remove"/></a>
+        </td>
 </script>
 <script>
+    var fairId;
     $(document).ready(function(){
+        fairId = $.urlGet()['fairId'];
         $(".ad_edit").load("/adedit");
-        $.ajax({
-            type : "GET",
-            url : "/fair/findName",
-            success: function(data) {
-                var obj = data;
-                if(obj.status=="200"){
-                    var fairId = $.urlGet()['fairId'];
-                    obj.data.forEach(function(item){
-                        if(item._id==fairId){
-                            $('.selectpicker').append("<option value='"+item._id+"' selected>"+item.chnName+" （"+item.engName+"）</option>");
-                        }else{
-                            $('.selectpicker').append("<option value='"+item._id+"'>"+item.chnName+" （"+item.engName+"）</option>");
-                        }
-                        $('.selectpicker').selectpicker('refresh');
-                    })
-                }else{
-                    alert('加载失败。')
-                }
-            }
-        });
+        Handlebars.registerPartial("detail", $("#list-template").html());
+        loadPage()
     });
-    loadPage()
-    function loadPage(pageNo,search){
-        if(pageNo){
-            currPage=pageNo;
-        }
+    function loadPage(search){
         var param={
-            page:pageNo,
-            limit:5
+            id:fairId
         }
         if(search){
             param.search=search;
         }
         $.ajax({
             type : "GET",
-            url : "/ad/find",
+            url : "/fair/findOne",
             data:param,
             success: function(data) {
                 var obj = data;
                 if(obj.status=="200"){
-                    $('#list').handlebars($('#list-template'), obj);
-                    page(obj.data.count,'loadPage')
+                    $('#list').handlebars($('#template'), obj.data.advertisement);
                 }else{
                     alert('加载失败。')
                 }
@@ -131,6 +129,9 @@
         });
     }
     $('#search-btn').on('click',function(){
-        loadPage(1,$('#search').val())
+        loadPage($('#search').val())
+    })
+    $('.selectpicker').on('change',function(){
+        loadPage()
     })
 </script>

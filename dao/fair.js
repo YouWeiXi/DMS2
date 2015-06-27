@@ -3,7 +3,7 @@
  */
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
-//    ObjectId = Schema.ObjectId;
+    ObjectId = Schema.ObjectId;
 
 var SponsorSchema = new Schema({
     name: { type: String },
@@ -91,5 +91,24 @@ exports.findName = function (callback) {
     Fair.find({}, '_id chnName engName', function (err, docs) {
         console.log(docs)
         callback(err,docs)
+    })
+}
+exports.findOne = function (id,callback) {
+    Fair.findOne({"_id": id})
+        .populate('advertisement.agent')
+        .populate('advertisement.builder')
+        .populate('advertisement.transport')
+        .exec(callback)
+}
+exports.addAd = function (id,type,adId,callback) {
+    Fair.findOne({"_id": id},  function(err, documents) {
+        documents.advertisement[type].push(adId);
+        documents.save(callback);
+    })
+}
+exports.removeAd = function (id,type,adId,callback) {
+    Fair.findOne({"_id": id},  function(err, documents) {
+        documents.advertisement[type].remove(adId);
+        documents.save(callback);
     })
 }

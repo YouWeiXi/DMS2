@@ -5,6 +5,7 @@ var formidable=require('formidable');
 var fs 		   = require('fs');
 var path 	   = require('path');
 var adDao = require('../dao/ad');
+var fairDao = require('../dao/fair');
 var response = require('../common/response');
 var config = require('../config').config;
 exports.save=function (req, res) {
@@ -13,7 +14,7 @@ exports.save=function (req, res) {
     form.multiples = true;
     // Parse file.
     form.parse(req, function(err, fields, files) {
-        if(files) {
+        if(files.adlogofile) {
             var file=files.adlogofile;
             // Read file.
             fs.readFile(file.path, function (err, data) {
@@ -27,21 +28,28 @@ exports.save=function (req, res) {
                     } else {
                         if(fields){
                             fields.pic=name;
-                            adDao.save(fields,function(err,list){
-                                if(err){
-                                    return res.json(response.buildError(err.code));
-                                }
-                                res.json(response.buildOK());
-                            });
+                            save(fields,res)
                         }
                     }
                 });
             });
         } else {
-            return res.json(response.buildError('Did not receive any file!'));
+            save(fields,res);
         }
     });
 };
+var save=function(fields,res){
+    //保存广告
+    adDao.save(fields,function(err,doc){
+        //更新fair
+        fairDao.addAd(fields.fairId,fields.type,doc._id,function(err,doc){
+            if(err){
+                return res.json(response.buildError(err.code));
+            }
+            res.json(response.buildOK());
+        })
+    });
+}
 exports.find=function (req, res) {
     adDao.find(req.query,function(err,list){
         if(err){
@@ -87,10 +95,13 @@ exports.update=function (req, res) {
     });
 };
 exports.remove=function (req, res) {
-    adDao.remove(req.query,function(err,list){
-        if(err){
-            return res.json(response.buildError(err.code));
-        }
-        res.json(response.buildOK());
+    adDao.remove(req.query._id,function(err,list){
+        //更新fair
+        fairDao.removeAd(req.query.fairId,req.query.type,req.query._id,function(err,doc){
+            if(err){
+                return res.json(response.buildError(err.code));
+            }
+            res.json(response.buildOK());
+        })
     });
 };

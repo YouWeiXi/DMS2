@@ -24,13 +24,7 @@ var Advertisement = mongoose.model("advertisement", AdSchema);
 
 exports.save = function (obj,callback) {
     var obj = new Advertisement(obj);
-    obj.save(function(err){
-        console.log(err)
-        if (err) {
-            callback(err)
-        }
-        callback()
-    });
+    obj.save(callback);
 }
 exports.find = function (param,callback) {
     createQuery(param).count(function (err, count) {
@@ -68,8 +62,8 @@ exports. update = function (obj,callback) {
         callback(err,docs)
     });
 }
-exports.remove = function (query,callback) {
-    Advertisement.remove(query,function(err,docs){
+exports.remove = function (id,callback) {
+    Advertisement.remove({_id:id},function(err,docs){
         console.log(docs);
         callback(err,docs)
     });

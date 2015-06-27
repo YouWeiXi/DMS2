@@ -194,3 +194,11 @@ exports.findName=function (req, res) {
         res.json(response.buildOK(list));
     });
 };
+exports.findOne=function (req, res) {
+    fairDao.findOne(req.query.id,function(err,docs){
+        if(err){
+            return res.json(response.buildError(err));
+        }
+        res.json(response.buildOK(docs));
+    });
+};
