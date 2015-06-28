@@ -1,25 +1,23 @@
 var http = require('http');
-var iconv = require('iconv-lite');
-/**
- *
- * @param options 为http options  增加encoding 属性
- *                  或 {url:xx,encoding:gbk}
- * @param callback
- */
-exports.get = function(options  ,callback){
-    var url=options.url;
-    var req = http.get(url?url:options , function(res){
-        var buffer = '';
-        res.on('data' , function(data){
-//            console.log('on data : ' + data);
-            if(options.encoding){
-                data=iconv.decode(data, options.encoding)
+var fs 		   = require('fs');
+var path 	   = require('path');
+var config = require('../config').config;
+exports.handleUpload = function(file,callback){
+    if(file.size==0){
+        return callback()
+    }
+    // Read file.
+    fs.readFile(file.path, function (err, data) {
+        var name=new Date().getTime()+'.'+file.name.split('\.')[1];
+        var p = path.join(config.upload_dir, name);
+        // Save file.
+        fs.writeFile(p, data, 'utf8', function (err) {
+            if (err) {
+                console.log(err)
+                return callback(err)
+            } else {
+                return callback(err,name,p)
             }
-            buffer += data;
-        });
-        res.on('end' , function(){
-//            console.log('get end : ' + buffer);
-            callback(buffer);
         });
     });
-};
+}

@@ -53,19 +53,19 @@
 <script id="template" type="text/x-handlebars-template">
     {{#each agent}}
         <tr id="{{_id}}">
-            <td id="type{{_id}}">代理公司</td>
+            <td id="type{{_id}}" data-val="agent">代理公司</td>
             {{>detail}}
         </tr>
     {{/each}}
     {{#each builder}}
         <tr id="{{_id}}">
-            <td id="type{{_id}}">设计搭建公司</td>
+            <td id="type{{_id}}" data-val="builder">设计搭建公司</td>
             {{>detail}}
         </tr>
     {{/each}}
     {{#each transport}}
         <tr id="{{_id}}">
-            <td id="type{{_id}}">物流公司</td>
+            <td id="type{{_id}}" data-val="transport">物流公司</td>
             {{>detail}}
         </tr>
     {{/each}}
@@ -123,10 +123,16 @@
             }
         });
     }
-    function del(id){
-        $.get("/ad/remove",{_id:id}, function(result){
-            $('#'+id).remove()
-        });
+    function del(adId){
+        if(confirm("是否彻底删除广告（请慎重选择，可从操作中查看关联展会列表）?")){
+            $.get("/ad/remove",{_id:adId,fairId:fairId,type:$('#type'+adId).attr('data-val')}, function(result){
+                $('#'+adId).remove()
+            });
+        }else{
+            $.get("/fair/removeAd",{adId:adId,fairId:fairId,type:$('#type'+adId).attr('data-val')}, function(result){
+                $('#'+adId).remove()
+            });
+        }
     }
     $('#search-btn').on('click',function(){
         loadPage($('#search').val())

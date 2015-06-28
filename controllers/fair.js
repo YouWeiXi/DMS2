@@ -2,12 +2,11 @@
  * Created by zoey on 2015/6/11.
  */
 var fairDao = require('../dao/fair');
+var adDao = require('../dao/ad');
 var response = require('../common/response');
 var formidable=require('formidable');
-var fs 		   = require('fs');
-var path 	   = require('path');
 var xlsx = require('node-xlsx');
-var config = require('../config').config;
+var util = require('../common/util');
 exports.init=function (req, res) {
     for(var i=0;i<20;i++){
         fairDao.save({
@@ -37,12 +36,6 @@ exports.init=function (req, res) {
     }
 };
 exports.save=function (req, res) {
-    /*fairDao.save(req.body,function(err,list){
-        if(err){
-            return res.json(response.buildError(err.code));
-        }
-        res.json(response.buildOK());
-    });*/
     var form = new formidable.IncomingForm();
     form.type = 'multipart';
     form.multiples = true;
@@ -50,31 +43,24 @@ exports.save=function (req, res) {
     form.parse(req, function(err, fields, files) {
         if(files) {
             var file=files.logofile;
-            console.log(files)
-            console.log(fields)
-            // Read file.
-            fs.readFile(file.path, function (err, data) {
-                var name=new Date().getTime()+'.'+file.name.split('\.')[1];
-//                var name=uuid.v1()+'.'+item.name.split('\.')[1];
-                var p = path.join(config.upload_dir, name);
-                // Save file.
-                fs.writeFile(p, data, 'utf8', function (err) {
-                    if (err) {
-                        console.log(err)
-                        return res.json(response.buildError('Something went wrong!'));
-                    } else {
-                        if(fields){
+            util.handleUpload(file,function(err,name){
+                if (err) {
+                    console.log(err)
+                    return res.json(response.buildError('Something went wrong!'));
+                } else {
+                    if(fields){
+                        if(name!=null){
                             fields.logo=name;
-                            fairDao.save(fields,function(err,list){
-                                if(err){
-                                    return res.json(response.buildError(err.code));
-                                }
-                                res.json(response.buildOK());
-                            });
                         }
+                        fairDao.save(fields,function(err,list){
+                            if(err){
+                                return res.json(response.buildError(err.code));
+                            }
+                            res.json(response.buildOK());
+                        });
                     }
-                });
-            });
+                }
+            })
         } else {
             return res.json(response.buildError('Did not receive any file!'));
         }
@@ -89,13 +75,6 @@ exports.find=function (req, res) {
     });
 };
 exports.update=function (req, res) {
-    /*fairDao.update(req.body,function(err,list){
-        if(err){
-            console.log(err)
-            return res.json(response.buildError(err));
-        }
-        res.json(response.buildOK());
-    });*/
     var form = new formidable.IncomingForm();
     form.type = 'multipart';
     form.multiples = true;
@@ -103,31 +82,24 @@ exports.update=function (req, res) {
     form.parse(req, function(err, fields, files) {
         if(files) {
             var file=files.logofile;
-            console.log(fields)
-            // Read file.
-            fs.readFile(file.path, function (err, data) {
-                var name=new Date().getTime()+'.'+file.name.split('\.')[1];
-//                var name=uuid.v1()+'.'+item.name.split('\.')[1];
-                var p = path.join(config.upload_dir, name);
-                // Save file.
-                fs.writeFile(p, data, 'utf8', function (err) {
-                    if (err) {
-                        console.log(err)
-                        return res.json(response.buildError('Something went wrong!'));
-                    } else {
-                        if(fields){
-                            fields.logo=name;
-                            fairDao.update(fields,function(err,list){
-                                if(err){
-                                    console.log(err)
-                                    return res.json(response.buildError(err));
-                                }
-                                res.json(response.buildOK());
-                            });
+            util.handleUpload(file,function(err,name){
+                if (err) {
+                    return res.json(response.buildError('Something went wrong!'));
+                } else {
+                    if(fields){
+                        if(name!=null) {
+                            fields.logo = name;
                         }
+                        fairDao.update(fields,function(err,list){
+                            if(err){
+                                console.log(err)
+                                return res.json(response.buildError(err));
+                            }
+                            res.json(response.buildOK());
+                        });
                     }
-                });
-            });
+                }
+            })
         } else {
             return res.json(response.buildError('Did not receive any file!'));
         }
@@ -152,35 +124,28 @@ exports.import = function(req, res) {
     form.parse(req, function(err, fields, files) {
         if(files) {
             var file=files.uploadfile;
-            // Read file.
-            fs.readFile(file.path, function (err, data) {
-                var name=new Date().getTime()+'.'+file.name.split('\.')[1];
-//                var name=uuid.v1()+'.'+item.name.split('\.')[1];
-                var p = path.join(config.upload_dir, name);
-                // Save file.
-                fs.writeFile(p, data, 'utf8', function (err) {
-                    if (err) {
-                        console.log(err)
-                        return res.json(response.buildError('Something went wrong!'));
-                    } else {
-                        var xlsObject = xlsx.parse(p);
-                        console.log(JSON.parse(JSON.stringify(xlsObject[0].data)))
-                        var data=xlsObject[0].data;
-                        for(var i= 1;i<data.length;i++){
-                            var fair={};
-                            for(var j=0;j<data[0].length;j++){
-                                fair[data[0][j]]=data[i][j];
-                            }
-                            fairDao.save(fair,function(err,list){
-                                console.log(err)
-                            });
-                            if(i==data.length-1){
-                                res.json(response.buildOK());
-                            }
+            util.handleUpload(file,function(err,name,p){
+                if (err) {
+                    console.log(err)
+                    return res.json(response.buildError('Something went wrong!'));
+                } else {
+                    var xlsObject = xlsx.parse(p);
+                    console.log(JSON.parse(JSON.stringify(xlsObject[0].data)))
+                    var data=xlsObject[0].data;
+                    for(var i= 1;i<data.length;i++){
+                        var fair={};
+                        for(var j=0;j<data[0].length;j++){
+                            fair[data[0][j]]=data[i][j];
+                        }
+                        fairDao.save(fair,function(err,list){
+                            console.log(err)
+                        });
+                        if(i==data.length-1){
+                            res.json(response.buildOK());
                         }
                     }
-                });
-            });
+                }
+            })
         } else {
             return res.json(response.buildError('Did not receive any file!'));
         }
@@ -200,5 +165,14 @@ exports.findOne=function (req, res) {
             return res.json(response.buildError(err));
         }
         res.json(response.buildOK(docs));
+    });
+};
+exports.removeAd=function (req, res) {
+    //移除fair内ad
+    fairDao.removeAdByOne(req.query.fairId,req.query.type,req.query.adId,function(err,doc){
+        if(err){
+            return res.json(response.buildError(err.code));
+        }
+        res.json(response.buildOK());
     });
 };

@@ -64,7 +64,6 @@ exports. update = function (obj,callback) {
 }
 exports.remove = function (id,callback) {
     Advertisement.remove({_id:id},function(err,docs){
-        console.log(docs);
         callback(err,docs)
     });
 }

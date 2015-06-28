@@ -106,9 +106,29 @@ exports.addAd = function (id,type,adId,callback) {
         documents.save(callback);
     })
 }
-exports.removeAd = function (id,type,adId,callback) {
+/**
+ * 移除指定展会内的指定广告
+ * @param id 展会id
+ * @param type 广告类型
+ * @param adId 广告id
+ * @param callback
+ */
+exports.removeAdByOne = function (id,type,adId,callback) {
     Fair.findOne({"_id": id},  function(err, documents) {
         documents.advertisement[type].remove(adId);
         documents.save(callback);
     })
+}
+/**
+ * 根据广告id 移除所有于此关联展会的广告
+ * @param param
+ * @param callback
+ */
+exports.removeAdByAll = function (param,callback) {
+    /*Fair.find(param,  function(err, docs) {
+        docs.forEach(function(documents){
+            documents.advertisement[param.type].remove(adId);
+            documents.save(callback);
+        })
+    })*/
 }
