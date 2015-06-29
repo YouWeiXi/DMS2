@@ -28,6 +28,7 @@ router.post('/fair/import', fair.import);
 router.get('/fair/findName', fair.findName);
 router.get('/fair/findOne', fair.findOne);
 router.get('/fair/removeAd', fair.removeAd);
+router.get('/fair/addAd', fair.addAd);
 
 router.post('/user/reg', user.reg);
 router.post('/user/login', user.login);

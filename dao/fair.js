@@ -132,3 +132,16 @@ exports.removeAdByAll = function (param,callback) {
         })
     })*/
 }
+/**
+ * 添加指定展会内的指定广告
+ * @param id 展会id
+ * @param type 广告类型
+ * @param adId 广告id
+ * @param callback
+ */
+exports.addAd = function (id,type,adId,callback) {
+    Fair.findOne({"_id": id},  function(err, documents) {
+        documents.advertisement[type].push(adId);
+        documents.save(callback);
+    })
+}

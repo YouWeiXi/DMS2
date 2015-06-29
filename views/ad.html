@@ -14,13 +14,7 @@
                 </select>
             </div>
             <div class="form-group">
-                <input type="text" class="form-control" id="search">
-            </div>
-            <div class="form-group">
-                <input class="btn btn-default" type="button" value="查询" id="search-btn">
-            </div>
-            <div class="form-group">
-                <input class="btn btn-success" type="button" value="添加" data-toggle="modal" data-target="#ad_edit">
+                <input class="btn btn-success" type="button" value="添加" data-toggle="modal" data-target="#new-modal">
             </div>
         </form>
         <table class="table table-bordered">
@@ -41,12 +35,6 @@
             </thead>
             <tbody id="list"></tbody>
         </table>
-        <div class="text-right">
-            <nav>
-                <ul class="pagination">
-                </ul>
-            </nav>
-        </div>
     </div>
     <div class="ad_edit"></div>
 </html>
@@ -90,7 +78,7 @@
         <td id="email{{_id}}">{{email}}</td>
         <td id="qq{{_id}}">{{qq}}</td>
         <td>
-            <a onclick="edit('{{_id}}')"><span class="glyphicon glyphicon-pencil" data-toggle="modal" data-target="#ad_edit"/></a>&nbsp;&nbsp;&nbsp;&nbsp;
+            <a onclick="edit('{{_id}}')"><span class="glyphicon glyphicon-pencil" data-toggle="modal" data-target="#edit-modal"/></a>&nbsp;&nbsp;&nbsp;&nbsp;
             <a onclick="del('{{_id}}')"><span class="glyphicon glyphicon-remove"/></a>
         </td>
 </script>
@@ -134,9 +122,6 @@
             });
         }
     }
-    $('#search-btn').on('click',function(){
-        loadPage($('#search').val())
-    })
     $('.selectpicker').on('change',function(){
         loadPage()
     })

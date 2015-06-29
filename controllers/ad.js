@@ -13,7 +13,7 @@ exports.save=function (req, res) {
     // Parse file.
     form.parse(req, function(err, fields, files) {
         if(files.adlogofile) {
-            var file=files.adlogofile;
+            var file=files['ad-new-logofile'];
             util.handleUpload(file,function(err,name){
                 if (err) {
                     return res.json(response.buildError('Something went wrong!'));
@@ -61,7 +61,7 @@ exports.update=function (req, res) {
     // Parse file.
     form.parse(req, function(err, fields, files) {
         if(files) {
-            var file=files.adlogofile;
+            var file=files['ad-edit-logofile'];
             util.handleUpload(file,function(err,name){
                 if (err) {
                     return res.json(response.buildError('Something went wrong!'));

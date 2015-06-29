@@ -176,3 +176,13 @@ exports.removeAd=function (req, res) {
         res.json(response.buildOK());
     });
 };
+exports.addAd=function (req, res) {
+    console.log(req.query)
+    //更新fair内ad
+    fairDao.addAd(req.query.fairId,req.query.type,req.query.adId,function(err,doc){
+        if(err){
+            return res.json(response.buildError(err.code));
+        }
+        res.json(response.buildOK());
+    });
+};
