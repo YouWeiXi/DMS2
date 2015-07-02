@@ -235,7 +235,7 @@
         </div>
     </div><!-- /.modal-content -->
 </div><!-- /.modal -->
-<div class="modal fade" style="width: auto" id="ad_dialog" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal fade" style="width: auto" id="remove_modal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -244,15 +244,21 @@
                     &times;
                 </button>
                 <h4 class="modal-title">
-                    选择广告类型
+                    选择删除广告类型
                 </h4>
             </div>
             <div class="modal-body">
+                请慎重选择，可从广告管理中查看关联展会列表
+                <p/>
+                <button type="button" class="btn btn-danger" id="ad-remove-btn">
+                    删除广告,及移除所有展会与此广告的关系
+                </button>
+                <button type="button" class="btn btn-primary" id="fair-remove-btn">
+                    仅删除当前展会与此广告的关系
+                </button>
+                <p/>
                 <button type="button" class="btn btn-default" data-dismiss="modal">
                     关闭
-                </button>
-                <button type="button" class="btn btn-primary" id="upload-btn">
-                    上传
                 </button>
             </div>
         </div>
@@ -281,6 +287,12 @@
 </script>
 <script>
     function edit(id){
+        /*
+        //如果存在图片
+        if($('#pic'+id)[0]){
+            $('#ad-edit-previewdiv').addClass('show')
+            $('#ad-edit-preview').attr('src',$('#pic'+id)[0].src);
+        }*/
         $('#edit-_id').val(id);
         $('#edit-name').val($('#name'+id).html());
         $('#edit-contact').val($('#contact'+id).html());
@@ -302,7 +314,6 @@
         var id=$('#'+prefix+'_id').val();
         var url='/ad/save';
         var param={
-            fairId:fairId,
             type:type,
             name:$('#'+prefix+'name').val(),
             contact:$('#'+prefix+'contact').val(),
@@ -316,6 +327,8 @@
         if(id){
             url='/ad/update';
             param._id=id;
+        }else{
+            param.fairId=fairId;
         }
         var formdata = new FormData($("#"+prefix+"form")[0]);
         for(var k in param){
@@ -366,12 +379,12 @@
     $('#ad-edit-logofile').on('change', function() {
         preview('ad-edit-')
     });
-    $('#ad_new').on('hide', function() {
-        clear('')
+    $('#new-modal').on('hide', function() {
+        clear('new-')
     });
-    $('#ad_edit').on('hide', function() {
+    $('#edit-modal').on('hide', function() {
         $('#edit-_id').val('');
-        clear('')
+        clear('edit-')
     });
     function clear(prefix){
         $('#'+prefix+'name').val('');
@@ -382,6 +395,11 @@
         $('#'+prefix+'fax').val('');
         $('#'+prefix+'email').val('');
         $('#'+prefix+'qq').val('');
+
+        //清空图片
+        $('#ad-'+prefix+'-logofile').val('');
+        $('#ad-'+prefix+'previewdiv').removeClass('show')
+        $('#ad-'+prefix+'preview').attr('src','');
     }
     function preview(prefix){
         var f = document.getElementById(prefix+"logofile").files[0];
@@ -397,4 +415,23 @@
     $('#search-btn').on('click',function(){
         loadAds($('#search').val())
     })
+    $('#ad-remove-btn').on('click',function(){
+        $.get("/ad/remove",{_id:curr_adId,fairId:fairId,type:$('#type'+curr_adId).attr('data-val')}, function(result){
+            $('#remove_modal').modal("hide")
+            loadPage()
+        });
+    })
+    $('#fair-remove-btn').on('click',function(){
+        $.get("/fair/removeAd",{adId:curr_adId,fairId:fairId,type:$('#type'+curr_adId).attr('data-val')}, function(result){
+            $('#'+curr_adId).remove()
+            $('#remove_modal').modal("hide")
+        });
+    })
+    var curr_adId=null;
+    $('#remove_modal').on('hide', function() {
+        curr_adId=null;
+    });
+    function del(adId){
+        curr_adId=adId;
+    }
 </script>

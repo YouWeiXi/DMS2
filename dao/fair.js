@@ -100,11 +100,25 @@ exports.findOne = function (id,callback) {
         .populate('advertisement.transport')
         .exec(callback)
 }
+/**
+ * 添加指定展会内的指定广告
+ * @param id 展会id
+ * @param type 广告类型
+ * @param adId 广告id
+ * @param callback
+ */
 exports.addAd = function (id,type,adId,callback) {
-    Fair.findOne({"_id": id},  function(err, documents) {
-        documents.advertisement[type].push(adId);
-        documents.save(callback);
-    })
+    var key='advertisement.'+type
+    var a={};
+    a[key]=adId
+    var update = {'$push':a};
+    Fair.update({_id:id},update,{},function(err,docs){
+        callback(err,docs)
+    });
+    //    Fair.findOne({"_id": id},  function(err, documents) {
+//        documents.advertisement[type].push(adId);
+//        documents.save(callback);
+//    })
 }
 /**
  * 移除指定展会内的指定广告
@@ -114,34 +128,33 @@ exports.addAd = function (id,type,adId,callback) {
  * @param callback
  */
 exports.removeAdByOne = function (id,type,adId,callback) {
-    Fair.findOne({"_id": id},  function(err, documents) {
-        documents.advertisement[type].remove(adId);
-        documents.save(callback);
-    })
+//    Fair.findOne({"_id": id},  function(err, documents) {
+//        documents.advertisement[type].remove(adId);
+//        documents.save(callback);
+//    })
+    var key='advertisement.'+type
+    var a={};
+    a[key]=adId
+    var update = {'$pull':a};
+    Fair.update({_id:id},update,{},function(err,docs){
+        callback(err,docs)
+    });
 }
 /**
  * 根据广告id 移除所有于此关联展会的广告
- * @param param
- * @param callback
- */
-exports.removeAdByAll = function (param,callback) {
-    /*Fair.find(param,  function(err, docs) {
-        docs.forEach(function(documents){
-            documents.advertisement[param.type].remove(adId);
-            documents.save(callback);
-        })
-    })*/
-}
-/**
- * 添加指定展会内的指定广告
- * @param id 展会id
  * @param type 广告类型
  * @param adId 广告id
  * @param callback
  */
-exports.addAd = function (id,type,adId,callback) {
-    Fair.findOne({"_id": id},  function(err, documents) {
-        documents.advertisement[type].push(adId);
-        documents.save(callback);
+exports.removeAdByAll = function (adId,callback) {
+    var q={'$or': [{'advertisement.agent':adId},{ 'advertisement.builder':adId},{'advertisement.transport':adId}]};
+    Fair.find(q,  function(err, docs) {
+        docs.forEach(function(documents){
+            documents.advertisement.agent.remove(adId);
+            documents.advertisement.builder.remove(adId);
+            documents.advertisement.transport.remove(adId);
+            documents.save();
+        })
+        callback(err,{})
     })
 }

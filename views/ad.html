@@ -3,6 +3,11 @@
     <script src="/javascripts/bootstrap-select.min.js"></script>
     <script src="/javascripts/jquery-util.js"></script>
     <div class="container">
+        <ol class="breadcrumb">
+            <li><a href="./">首页</a></li>
+            <li><a href="./fair">展会管理</a></li>
+            <li class="active" id="fairName"></li>
+        </ol>
         <p></p>
         <form class="form-inline">
             <div class="form-group">
@@ -60,11 +65,11 @@
 </script>
 <script id="list-template" type="text/x-handlebars-template">
 
-        <td id="pic{{_id}}">
+        <td>
             {{#if pic}}
             <div class="col-xs-6 col-md-6">
                 <a href="#" class="thumbnail">
-                    <img src="/user_data/{{pic}}">
+                    <img id="pic{{_id}}" src="/user_data/{{pic}}">
                 </a>
             </div>
             {{/if}}
@@ -79,7 +84,7 @@
         <td id="qq{{_id}}">{{qq}}</td>
         <td>
             <a onclick="edit('{{_id}}')"><span class="glyphicon glyphicon-pencil" data-toggle="modal" data-target="#edit-modal"/></a>&nbsp;&nbsp;&nbsp;&nbsp;
-            <a onclick="del('{{_id}}')"><span class="glyphicon glyphicon-remove"/></a>
+            <a onclick="del('{{_id}}')"><span class="glyphicon glyphicon-remove" data-toggle="modal" data-target="#remove_modal"/></a>
         </td>
 </script>
 <script>
@@ -104,23 +109,13 @@
             success: function(data) {
                 var obj = data;
                 if(obj.status=="200"){
+                    $('#fairName').html(obj.data.chnName);
                     $('#list').handlebars($('#template'), obj.data.advertisement);
                 }else{
                     alert('加载失败。')
                 }
             }
         });
-    }
-    function del(adId){
-        if(confirm("是否彻底删除广告（请慎重选择，可从操作中查看关联展会列表）?")){
-            $.get("/ad/remove",{_id:adId,fairId:fairId,type:$('#type'+adId).attr('data-val')}, function(result){
-                $('#'+adId).remove()
-            });
-        }else{
-            $.get("/fair/removeAd",{adId:adId,fairId:fairId,type:$('#type'+adId).attr('data-val')}, function(result){
-                $('#'+adId).remove()
-            });
-        }
     }
     $('.selectpicker').on('change',function(){
         loadPage()

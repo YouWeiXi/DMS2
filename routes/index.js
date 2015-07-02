@@ -5,14 +5,22 @@ var user = require('../controllers/user');
 var role = require('../controllers/role');
 var ad = require('../controllers/ad');
 /* GET home page. */
+router.get('/', checkLogin);
 router.get('/', function(req,res){ res.render('index');});
+router.get('/fair', checkLogin);
 router.get('/fair', function(req,res){ res.render('fair');});
 router.get('/login', function(req,res){ res.render('login');});
+router.get('/role', checkLogin);
 router.get('/role', function(req,res){res.render('role');});
+router.get('/user', checkLogin);
 router.get('/user', function(req,res){res.render('user');});
+router.get('/personal', checkLogin);
 router.get('/personal', function(req,res){res.render('personal');});
+router.get('/ad', checkLogin);
 router.get('/ad', function(req,res){res.render('ad');});
 router.get('/adedit', function(req,res){res.render('ad_edit',{layout:false});});
+router.get('/adview', checkLogin);
+router.get('/adview', function(req,res){res.render('ad_view');});
 router.get('/logout', function(req,res){
     req.session.user =  null;
     res.redirect('/login');
@@ -46,3 +54,10 @@ router.post('/ad/update', ad.update);
 router.get('/ad/find', ad.find);
 router.get('/ad/remove', ad.remove);
 module.exports = router;
+
+function  checkLogin(req, res, next) {
+    if (!req.session.user) {
+        return  res.redirect('/login');
+    }
+    next();
+}

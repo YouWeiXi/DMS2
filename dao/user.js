@@ -70,3 +70,8 @@ var createQuery = function(param){
     }
     return query;
 }
+exports.get = function(param){
+    User.find(param,function (err, docs) {
+        callback(err,docs)
+    })
+}

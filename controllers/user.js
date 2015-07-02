@@ -4,15 +4,32 @@
 var userDao = require('../dao/user');
 var response = require('../common/response');
 var path 	   = require('path');
+var crypto = require('crypto');
 exports.reg=function (req, res) {
-    userDao.save(req.body,function(err,list){
+    var md5 = crypto.createHash("md5");
+    var password = md5.update(req.body.password).digest('base64');
+    req.body.password=password;
+    userDao.get({username:req.body.username}, function (err, user) {
         if(err){
             return res.json(response.buildError(err.code));
         }
-        res.json(response.buildOK());
+        if(user){
+            return res.json(response.buildError('用户名存在'));
+        }
+        // 如果不存在则新增用户
+        userDao.save(req.body,function(err,list){
+            if(err){
+                return res.json(response.buildError(err.code));
+            }
+            res.json(response.buildOK());
+        });
     });
 };
 exports.login=function (req, res) {
+    //生成口令的散列值
+    var  md5 = crypto.createHash('md5');
+    var  password = md5.update(req.body.password).digest('base64');
+    req.body.password=password;
     userDao.login(req.body,function(err,list){
         if(err){
             return res.json(response.buildError(err));
@@ -51,7 +68,7 @@ exports.menu=function (req, res) {
     if(req.session.user){
         items=[
             {label:'展会管理',href:'/fair'},
-            {label:'广告管理',href:'/ad'},
+            {label:'广告管理',href:'/adview'},
             {label:'角色管理',href:'/role'},
             {label:'用户管理',href:'/user'},
             {label:'个人中心',href:'/personal'}

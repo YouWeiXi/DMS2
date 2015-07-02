@@ -86,18 +86,16 @@ exports.update=function (req, res) {
     });
 };
 exports.remove=function (req, res) {
-    console.log(req.query)
     adDao.remove(req.query._id,function(err,list){
         if(err){
             return res.json(response.buildError(err.code));
         }
-        res.json(response.buildOK());
         //更新fair
-//        fairDao.removeAdByOne(req.query.fairId,req.query.type,req.query._id,function(err,doc){
-//            if(err){
-//                return res.json(response.buildError(err.code));
-//            }
-//            res.json(response.buildOK());
-//        })
+        fairDao.removeAdByAll(req.query._id,function(err,doc){
+            if(err){
+                return res.json(response.buildError(err.code));
+            }
+            res.json(response.buildOK());
+        })
     });
 };
