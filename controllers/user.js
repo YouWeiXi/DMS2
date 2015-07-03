@@ -13,7 +13,7 @@ exports.reg=function (req, res) {
         if(err){
             return res.json(response.buildError(err.code));
         }
-        if(user){
+        if(user.length>0){
             return res.json(response.buildError('用户名存在'));
         }
         // 如果不存在则新增用户
