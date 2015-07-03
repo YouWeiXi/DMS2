@@ -72,8 +72,6 @@ var createQuery = function(param){
     query.populate('role')
     return query;
 }
-exports.get = function(param){
-    User.find(param,function (err, docs) {
-        callback(err,docs)
-    })
+exports.get = function(param,callback){
+    User.find(param,callback)
 }
