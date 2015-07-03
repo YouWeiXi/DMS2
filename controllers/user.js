@@ -69,9 +69,9 @@ exports.menu=function (req, res) {
         items=[
             {label:'展会管理',href:'/fair'},
             {label:'广告管理',href:'/adview'},
+            {label:'个人中心',href:'/personal'},
             {label:'角色管理',href:'/role'},
-            {label:'用户管理',href:'/user'},
-            {label:'个人中心',href:'/personal'}
+            {label:'用户管理',href:'/user'}
         ]
     }
     res.json(response.buildOK(items));
