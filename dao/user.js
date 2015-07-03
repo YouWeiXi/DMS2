@@ -7,7 +7,8 @@ var Schema = mongoose.Schema,
 
 var UserSchema = new Schema({
     username: { type: String },
-    password: { type: String }
+    password: { type: String },
+    role: { type: Schema.Types.ObjectId, ref: 'role' }
 });
 
 var User = mongoose.model("user", UserSchema);
@@ -68,6 +69,7 @@ var createQuery = function(param){
     }else{
         query = User.find({});
     }
+    query.populate('role')
     return query;
 }
 exports.get = function(param){

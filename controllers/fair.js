@@ -2,39 +2,11 @@
  * Created by zoey on 2015/6/11.
  */
 var fairDao = require('../dao/fair');
-var adDao = require('../dao/ad');
 var response = require('../common/response');
 var formidable=require('formidable');
 var xlsx = require('node-xlsx');
 var util = require('../common/util');
-exports.init=function (req, res) {
-    for(var i=0;i<20;i++){
-        fairDao.save({
-            chnName: i++,
-            engName: 'a',
-            time: new Date(),
-            position: 'a',
-            period: 2,
-            firstYear: 1987,
-            hallName: 'a',
-            sponsors: {},
-            undertakers: {},
-            categories: 'a',
-            lastYearInfo: 'a',
-            exhibitionAgent: 'a',
-            setupAgent: 'a',
-            shippingAgent: 'a',
-            website: 'a',
-            logo: 'a',
-            advertisement: {}
-        },function(err,list){
-            if(err){
-                return res.json(response.buildError(err.code));
-            }
-            res.json(response.buildOK());
-        });
-    }
-};
+
 exports.save=function (req, res) {
     var form = new formidable.IncomingForm();
     form.type = 'multipart';
@@ -184,5 +156,15 @@ exports.addAd=function (req, res) {
             return res.json(response.buildError(err.code));
         }
         res.json(response.buildOK());
+    });
+};
+exports.byAd=function (req, res) {
+    //更新fair内ad
+    fairDao.findbyAd(req.query.adId,function(err,doc){
+        if(err){
+            console.error(err)
+            return res.json(response.buildError(err.code));
+        }
+        res.json(response.buildOK(doc));
     });
 };

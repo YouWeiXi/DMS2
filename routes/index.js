@@ -27,7 +27,6 @@ router.get('/logout', function(req,res){
 });
 
 router.get('/menu', user.menu);
-router.get('/fair/init', fair.init);
 router.post('/fair/save', fair.save);
 router.post('/fair/update', fair.update);
 router.get('/fair/find', fair.find);
@@ -37,6 +36,7 @@ router.get('/fair/findName', fair.findName);
 router.get('/fair/findOne', fair.findOne);
 router.get('/fair/removeAd', fair.removeAd);
 router.get('/fair/addAd', fair.addAd);
+router.get('/fair/byAd', fair.byAd);
 
 router.post('/user/reg', user.reg);
 router.post('/user/login', user.login);

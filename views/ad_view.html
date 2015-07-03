@@ -86,57 +86,144 @@
         <td id="email{{_id}}">{{email}}</td>
         <td id="qq{{_id}}">{{qq}}</td>
         <td>
+            <a onclick="showfairs('{{_id}}')"><span class="glyphicon glyphicon-th-list" data-toggle="modal" data-target="#fairs-modal"/></a>&nbsp;&nbsp;&nbsp;&nbsp;
             <a onclick="edit('{{_id}}')"><span class="glyphicon glyphicon-pencil" data-toggle="modal" data-target="#edit-modal"/></a>&nbsp;&nbsp;&nbsp;&nbsp;
             <a onclick="del('{{_id}}')"><span class="glyphicon glyphicon-remove" data-toggle="modal" data-target="#ad_remove_modal"/></a>
         </td>
     </tr>
 {{/each}}
 </script>
+<div class="modal fade" id="fairs-modal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close"
+                        data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title">
+                    展会列表
+                </h4>
+            </div>
+            <div class="modal-body">
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <td>Logo</td>
+                        <td>名称</td>
+                        <td>地点</td>
+                        <td>大厅</td>
+                        <td>操作</td>
+                    </tr>
+                    </thead>
+                    <tbody id="fairlistbody"></tbody>
+                </table>
+                <div class="text-right">
+                    <nav>
+                        <ul class="pagination">
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">
+                    关闭
+                </button>
+            </div>
+        </div>
+    </div><!-- /.modal-content -->
+</div><!-- /.modal -->
+<script id="fair-list-template" type="text/x-handlebars-template">
+    {{#each this}}
+    <tr id="fair{{_id}}">
+        <td>
+            {{#if logo}}
+            <div style="width:100px;heigh:100px">
+                <a href="#" class="thumbnail">
+                    <img src="/user_data/{{logo}}">
+                </a>
+            </div>
+            {{/if}}
+        </td>
+        <td>{{chnName}}</td>
+        <td>{{position}}</td>
+        <td>{{hallName}}</td>
+        <td>
+            <a onclick="removeFairAd('{{_id}}')"><span class="glyphicon glyphicon-minus"/></a>
+        </td>
+    </tr>
+    {{/each}}
+</script>
 <script>
     $(document).ready(function(){
         $(".ad_edit").load("/adedit");
     });
     loadPage()
-function loadPage(pageNo,search){
-    if(pageNo){
-        currPage=pageNo;
-    }
-    var param={
-        page:pageNo,
-        limit:5
-    }
-    if(search){
-        param.search=search;
-    }
-    $.ajax({
-        type : "GET",
-        url : "/ad/find",
-        data:param,
-        success: function(data) {
-            var obj = data;
-            if(obj.status=="200"){
-            $('#list').handlebars($('#list-template'), obj);
-                page(obj.data.count,'loadPage')
-            }else{
-                alert('加载失败。')
-            }
+    function loadPage(pageNo,search){
+        if(pageNo){
+            currPage=pageNo;
         }
+        var param={
+            page:pageNo,
+            limit:5
+        }
+        if(search){
+            param.search=search;
+        }
+        $.ajax({
+            type : "GET",
+            url : "/ad/find",
+            data:param,
+            success: function(data) {
+                var obj = data;
+                if(obj.status=="200"){
+                $('#list').handlebars($('#list-template'), obj);
+                    page(obj.data.count,'loadPage')
+                }else{
+                    alert('加载失败。')
+                }
+            }
+        });
+    }
+    var curr_adId=null;
+    $('#remove_modal').on('hide', function() {
+        curr_adId=null;
     });
-}
-var curr_adId=null;
-$('#remove_modal').on('hide', function() {
-    curr_adId=null;
-});
-function del(id){
-    curr_adId=id;
-}
-$('#ad-remove-btn').on('click',function(){
-    $.get("/ad/remove",{_id:curr_adId,type:$('#type'+curr_adId).attr('data-val')}, function(result){
-        $('#remove_modal').modal("hide")
-        loadPage()
+    function del(id){
+        curr_adId=id;
+    }
+    $('#ad-remove-btn').on('click',function(){
+        $.get("/ad/remove",{_id:curr_adId,type:$('#type'+curr_adId).attr('data-val')}, function(result){
+            $('#remove_modal').modal("hide")
+            loadPage()
+        });
+    })
+    $('#search-btn').on('click',function(){
+        loadPage(1,$('#search').val())
+    })
+    var curr_adId=null;
+    $('#fairs-modal').on('hide', function() {
+        curr_adId=null;
     });
-})
-$('#search-btn').on('click',function(){
-    loadPage(1,$('#search').val())
-})
+    function showfairs(id){
+        curr_adId=id;
+        $.ajax({
+            type : "GET",
+            url : "/fair/byAd",
+            data:{adId:id},
+            success: function(data) {
+                var obj = data;
+                if(obj.status=="200"){
+                    $('#fairlistbody').handlebars($('#fair-list-template'), obj.data);
+                }else{
+                    alert('加载失败。')
+                }
+            }
+        });
+    }
+    function removeFairAd(fairId){
+        $.get("/fair/removeAd",{adId:curr_adId,fairId:fairId}, function(result){
+            $('#fair'+fairId).remove()
+        });
+    }
 </script>

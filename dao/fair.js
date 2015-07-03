@@ -132,9 +132,13 @@ exports.removeAdByOne = function (id,type,adId,callback) {
 //        documents.advertisement[type].remove(adId);
 //        documents.save(callback);
 //    })
-    var key='advertisement.'+type
     var a={};
-    a[key]=adId
+    if(type){
+        var key='advertisement.'+type
+        a[key]=adId
+    }else{
+        a={'advertisement.agent':adId, 'advertisement.builder':adId,'advertisement.transport':adId}
+    }
     var update = {'$pull':a};
     Fair.update({_id:id},update,{},function(err,docs){
         callback(err,docs)
@@ -157,4 +161,8 @@ exports.removeAdByAll = function (adId,callback) {
         })
         callback(err,{})
     })
+}
+exports.findbyAd = function (adId,callback) {
+    var q={'$or': [{'advertisement.agent':adId},{ 'advertisement.builder':adId},{'advertisement.transport':adId}]};
+    Fair.find(q,  callback)
 }
