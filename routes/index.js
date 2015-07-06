@@ -4,6 +4,8 @@ var fair = require('../controllers/fair');
 var user = require('../controllers/user');
 var role = require('../controllers/role');
 var ad = require('../controllers/ad');
+var sync = require('../controllers/sync');
+var init = require('../controllers/init');
 /* GET home page. */
 router.get('/', checkLogin);
 router.get('/', function(req,res){ res.render('index');});
@@ -21,12 +23,21 @@ router.get('/ad', function(req,res){res.render('ad');});
 router.get('/adedit', function(req,res){res.render('ad_edit',{layout:false});});
 router.get('/adview', checkLogin);
 router.get('/adview', function(req,res){res.render('ad_view');});
+router.get('/sync', checkLogin);
+router.get('/sync', function(req,res){res.render('sync');});
 router.get('/logout', function(req,res){
     req.session.user =  null;
     res.redirect('/login');
 });
+/* 数据同步 */
+router.get('/onSync', sync.sync);
+router.get('/setting/datasource', sync.setting);
+router.get('/getDatasource', sync.getDatasource);
+/* 数据同步 end */
+
 
 router.get('/menu', user.menu);
+router.get('/init', init.init);
 router.post('/fair/save', fair.save);
 router.post('/fair/update', fair.update);
 router.get('/fair/find', fair.find);

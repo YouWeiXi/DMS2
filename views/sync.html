@@ -1,0 +1,105 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<div class="container">
+    <p></p>
+    <form class="form-inline">
+        <div class="form-group">
+            <input class="btn btn-default" type="button" value="配置默认数据源"  data-toggle="modal" data-target="#setting" onclick="setting('default')">
+        </div>
+        <div class="form-group">
+            <input class="btn btn-default" type="button" value="配置产品数据源"  data-toggle="modal" data-target="#setting" onclick="setting('product')">
+        </div>
+        <div class="form-group">
+            <input class="btn btn-success" type="button" value="同步"  data-toggle="modal" id="sync-btn">
+        </div>
+    </form>
+</div>
+<div class="modal fade" id="setting" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close"
+                        data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title">
+                    配置数据源
+                </h4>
+            </div>
+            <div class="modal-body">
+                <form id="editPwd-form" class="form-horizontal" role="form" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">MongoDB URL</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control hide" id="type">
+                            <input type="text" class="form-control" id="datasource" placeholder="请输入MongoDB URL">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">
+                    关闭
+                </button>
+                <button type="button" class="btn btn-primary" id="save-btn">
+                    保存
+                </button>
+            </div>
+        </div>
+    </div><!-- /.modal-content -->
+</div><!-- /.modal -->
+</html>
+<script>
+    $('#save-btn').on('click',function(){
+        var url='/setting/datasource';
+        $.ajax({
+            type:'GET',
+            url: url,
+            data:{
+                type:$('#type').val(),
+                url:$('#datasource').val()
+            },
+            success: function(data){
+                if(data.status==200){
+                    alert("设置成功");
+                    $("#setting").modal("hide")
+                }else
+                    alert(JSON.stringify(data));
+            }
+        })
+    })
+    $('#sync-btn').on('click',function(){
+        var url='/onSync';
+        $.ajax({
+            type:'GET',
+            url: url,
+            success: function(data){
+                if(data.status==200){
+                    alert("同步成功");
+                }else
+                    alert(JSON.stringify(data));
+            }
+        })
+    })
+    function setting(type){
+        if(type=='default'){
+            $('.modal-title').html('配置默认数据源')
+        }else{
+            $('.modal-title').html('配置产品数据源')
+        }
+        $.ajax({
+            type:'GET',
+            url: '/getDatasource',
+            data:{
+                type:type
+            },
+            success: function(data){
+                if(data.status==200){
+                    $('#type').val(type);
+                    $('#datasource').val(data.data);
+                }
+                else
+                    alert(JSON.stringify(data));
+            }
+        })
+    }
+</script>

@@ -2,6 +2,7 @@
  * Created by zoey on 2015/6/11.
  */
 var mongoose = require('mongoose');
+var mongo = require('./template/mongodb');
 var Schema = mongoose.Schema;
     ObjectId = Schema.ObjectId;
 
@@ -32,8 +33,9 @@ var FairSchema = new Schema({
     }
 //    advertisement: { type: [mongoose.Schema.Types.ObjectId], label: "Advertisement ID", optional: true }
 });
+var Fair = mongo.datasource.default.model("fair", FairSchema);
 
-var Fair = mongoose.model("fair", FairSchema);
+exports.Fair=Fair;
 
 exports.save = function (obj,callback) {
     var obj = new Fair(obj);

@@ -2,6 +2,7 @@
  * Created by zoey on 2015/6/24.
  */
 var mongoose = require('mongoose');
+var mongo = require('./template/mongodb');
 var Schema = mongoose.Schema,
     ObjectId = Schema.ObjectId;
 
@@ -20,7 +21,11 @@ var AdSchema = new Schema({
     qq: { type: Number, optional: true }
 });
 
-var Advertisement = mongoose.model("advertisement", AdSchema);
+var Advertisement = mongo.datasource.default.model("advertisement", AdSchema);
+
+exports.Advertisement=Advertisement;
+
+exports.AdSchema=AdSchema;
 
 exports.save = function (obj,callback) {
     var obj = new Advertisement(obj);

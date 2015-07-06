@@ -6,7 +6,8 @@ exports.config = {
     port: 5000,
     upload_dir: path.join(__dirname, 'public', 'user_data'),
     mongodb: {
-        url: 'mongodb://127.0.0.1:27017/fairs'
+        url: 'mongodb://127.0.0.1:27017/fairs',
+        productUrl:'mongodb://127.0.0.1:27017/fairs_product'
     }
 };
 

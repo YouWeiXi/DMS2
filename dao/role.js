@@ -2,6 +2,7 @@
  * Created by zoey on 2015/6/19.
  */
 var mongoose = require('mongoose');
+var mongo = require('./template/mongodb');
 var Schema = mongoose.Schema,
     ObjectId = Schema.ObjectId;
 
@@ -10,17 +11,11 @@ var RoleSchema = new Schema({
     roleName: { type: String }
 });
 
-var Role = mongoose.model("role", RoleSchema);
+var Role = mongo.datasource.default.model("role", RoleSchema);
 
 exports.save = function (obj,callback) {
     var obj = new Role(obj);
-    obj.save(function(err){
-        console.log(err)
-        if (err) {
-            callback(err)
-        }
-        callback()
-    });
+    obj.save(callback);
 }
 exports.find = function (param,callback) {
     createQuery(param).count(function (err, count) {

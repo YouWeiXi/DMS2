@@ -1,3 +1,7 @@
+var config = require('./config').config;
+var mongo=require('./dao/template/mongodb');
+mongo.createConnection()
+mongo.createConnection(config.mongodb.productUrl)
 var express = require('express');
 var session = require('express-session');
 var partials = require('express-partials');
@@ -8,8 +12,6 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var routes = require('./routes/index');
-var config = require('./config').config;
-var mongoose = require('mongoose');
 var app = express();
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -36,5 +38,5 @@ app.set('port', config.port);
 http.createServer(app).listen(config.port, function(){
     console.log("Express server listening on port " + config.port);
 });
-require('./dao/template/mongodb')(config,mongoose);
+//require('./dao/template/mongodb')(config,mongoose);
 module.exports = app;

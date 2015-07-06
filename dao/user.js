@@ -2,6 +2,7 @@
  * Created by zoey on 2015/6/19.
  */
 var mongoose = require('mongoose');
+var mongo = require('./template/mongodb');
 var Schema = mongoose.Schema,
     ObjectId = Schema.ObjectId;
 
@@ -11,17 +12,11 @@ var UserSchema = new Schema({
     role: { type: Schema.Types.ObjectId, ref: 'role' }
 });
 
-var User = mongoose.model("user", UserSchema);
+var User = mongo.datasource.default.model("user", UserSchema);
 
 exports.save = function (obj,callback) {
     var obj = new User(obj);
-    obj.save(function(err){
-        console.log(err)
-        if (err) {
-            callback(err)
-        }
-        callback()
-    });
+    obj.save(callback);
 }
 exports.login = function (param,callback) {
     User.findOne(param,function (err, list) {
@@ -69,7 +64,7 @@ var createQuery = function(param){
     }else{
         query = User.find({});
     }
-    query.populate('role')
+    query = query.populate('role')
     return query;
 }
 exports.get = function(param,callback){

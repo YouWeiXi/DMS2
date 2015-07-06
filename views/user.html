@@ -68,7 +68,7 @@
     {{#each data.list}}
     <tr id="{{_id}}">
         <td id="username{{_id}}">{{username}}</td>
-        <td id="roleName{{_id}}">{{roleName}}</td>
+        <td id="roleName{{_id}}">{{role.roleName}}</td>
         <td>
             <a onclick="edit('{{_id}}')"><span class="glyphicon glyphicon-pencil" data-toggle="modal" data-target="#edit"/></a>&nbsp;&nbsp;&nbsp;&nbsp;
             <a onclick="del('{{_id}}')"><span class="glyphicon glyphicon-remove"/></a>
