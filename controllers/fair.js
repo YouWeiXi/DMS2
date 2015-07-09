@@ -168,3 +168,19 @@ exports.byAd=function (req, res) {
         res.json(response.buildOK(doc));
     });
 };
+exports.addSponsor=function (req, res) {
+    fairDao.addSponsor(req.query.fairId,req.query.type,req.query.sponsor,function(err,doc){
+        if(err){
+            return res.json(response.buildError(err.code));
+        }
+        res.json(response.buildOK());
+    });
+};
+exports.removeSponsor=function (req, res) {
+    fairDao.removeSponsor(req.query.fairId,req.query.type,req.query.sponsorId,function(err,doc){
+        if(err){
+            return res.json(response.buildError(err.code));
+        }
+        res.json(response.buildOK());
+    });
+};

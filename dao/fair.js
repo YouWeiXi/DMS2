@@ -168,3 +168,31 @@ exports.findbyAd = function (adId,callback) {
     var q={'$or': [{'advertisement.agent':adId},{ 'advertisement.builder':adId},{'advertisement.transport':adId}]};
     Fair.find(q,  callback)
 }
+/**
+ * 添加指定展会内的赞助商
+ * @param id  展会id
+ * @param type  类型sponsors主办方/undertakers承办方
+ * @param sponsor  赞助商对象
+ * @param callback
+ */
+exports.addSponsor = function (id,type,sponsor,callback) {
+    var a={};
+    a[type]=sponsor;
+    var update = {'$push':a};
+    Fair.update({_id:id},update,{},callback);
+}
+/**
+ * 移除指定展会内的赞助商
+ * @param id 展会id
+ * @param type 类型sponsors主办方/undertakers承办方
+ * @param sponsorId 赞助商id
+ * @param callback
+ */
+exports.removeSponsor = function (id,type,sponsorId,callback) {
+    var a={};
+    a[type]['_id']=sponsorId;
+    var update = {'$pull':a};
+    Fair.update({_id:id},update,{},function(err,docs){
+        callback(err,docs)
+    });
+}

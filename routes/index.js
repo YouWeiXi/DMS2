@@ -49,6 +49,8 @@ router.get('/fair/findOne', fair.findOne);
 router.get('/fair/removeAd', fair.removeAd);
 router.get('/fair/addAd', fair.addAd);
 router.get('/fair/byAd', fair.byAd);
+router.get('/fair/addSponsor', fair.addSponsor);
+router.get('/fair/removeSponsor', fair.removeSponsor);
 
 router.post('/user/reg', user.reg);
 router.post('/user/login', user.login);
