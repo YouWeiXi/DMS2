@@ -41,6 +41,7 @@
                 </ul>
             </nav>
         </div>
+        <div class="fair_sponsors"></div>
     </div>
     <!-- 模态框（Modal） -->
     <div class="modal fade" id="edit" tabindex="-1" role="dialog"
@@ -201,6 +202,7 @@
         <td id="category{{_id}}">{{category}}</td>
         <td id="website{{_id}}">{{website}}</td>
         <td>
+            <a onclick="sponsors('{{_id}}')"><span class="glyphicon glyphicon-pencil" data-toggle="modal" data-target="#sponsors-modal"/></a>&nbsp;&nbsp;&nbsp;&nbsp;
             <a onclick="ad('{{_id}}')"><span class="glyphicon glyphicon-pencil"/></a>&nbsp;&nbsp;&nbsp;&nbsp;
             <a onclick="edit('{{_id}}')"><span class="glyphicon glyphicon-edit" data-toggle="modal" data-target="#edit"/></a>&nbsp;&nbsp;&nbsp;&nbsp;
             <a onclick="del('{{_id}}')"><span class="glyphicon glyphicon-remove"/></a>
@@ -209,7 +211,10 @@
     {{/each}}
 </script>
 <script>
-    loadPage()
+    $(document).ready(function(){
+        $(".fair_sponsors").load("/fair_sponsors");
+        loadPage()
+    });
     function loadPage(pageNo,search){
         if(pageNo){
             currPage=pageNo;
