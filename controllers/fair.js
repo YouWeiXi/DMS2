@@ -13,8 +13,9 @@ exports.save=function (req, res) {
     form.multiples = true;
     // Parse file.
     form.parse(req, function(err, fields, files) {
-        if(files) {
-            var file=files.logofile;
+        fields.categories=fields.category.split(' ');
+        var file=files.logofile;
+        if(file) {
             util.handleUpload(file,function(err,name){
                 if (err) {
                     console.log(err)
@@ -34,7 +35,12 @@ exports.save=function (req, res) {
                 }
             })
         } else {
-            return res.json(response.buildError('Did not receive any file!'));
+            fairDao.save(fields,function(err,list){
+                if(err){
+                    return res.json(response.buildError(err.code));
+                }
+                res.json(response.buildOK());
+            });
         }
     });
 };
@@ -52,8 +58,9 @@ exports.update=function (req, res) {
     form.multiples = true;
     // Parse file.
     form.parse(req, function(err, fields, files) {
-        if(files) {
-            var file=files.logofile;
+        fields.categories=fields.category.split(' ');
+        var file=files.logofile;
+        if(file) {
             util.handleUpload(file,function(err,name){
                 if (err) {
                     return res.json(response.buildError('Something went wrong!'));
@@ -73,7 +80,13 @@ exports.update=function (req, res) {
                 }
             })
         } else {
-            return res.json(response.buildError('Did not receive any file!'));
+            fairDao.update(fields,function(err,list){
+                if(err){
+                    console.log(err)
+                    return res.json(response.buildError(err));
+                }
+                res.json(response.buildOK());
+            });
         }
     });
 };

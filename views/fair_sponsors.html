@@ -12,56 +12,15 @@
             </div>
             <div class="modal-body">
                 <ul class="nav nav-tabs">
-                    <li role="presentation" class="active"><a href="#new" data-toggle="tab">新建</a></li>
-                    <li role="presentation"><a href="#datalist" data-toggle="tab">列表</a></li>
+                    <li role="presentation" class="active"><a href="#datalist" data-toggle="tab">列表</a></li>
+                    <li role="presentation"><a href="#new" data-toggle="tab">新建</a></li>
                 </ul>
-                <br/>
-                <form class="form-horizontal" role="form">
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label"><span style="color: red;">*&nbsp;&nbsp;&nbsp;&nbsp;</span>类型</label>
-                        <div class="col-sm-10">
-                            <select id="new-type">
-                                <option value='agent'>主办方</option>
-                                <option value='builder'>承办方</option>
-                            </select>
-                        </div>
-                    </div>
-                </form>
                 <div class="tab-content">
-                    <div class="tab-pane fade in active" id="new">
-                        <form id="add-form" class="form-horizontal" role="form" enctype="multipart/form-data">
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label">名称</label>
-                                <div class="col-sm-10">
-                                    <input type="text" class="form-control hide" id="new-_id">
-                                    <input type="text" class="form-control" id="new-name" placeholder="请输入广告名称">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label">电话</label>
-                                <div class="col-sm-10">
-                                    <input type="text" class="form-control" id="new-tel" placeholder="请输入联系电话">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label">传真</label>
-                                <div class="col-sm-10">
-                                    <input type="text" class="form-control" id="new-fax" placeholder="请输入传真">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label">Email</label>
-                                <div class="col-sm-10">
-                                    <input type="text" class="form-control" id="new-email" placeholder="请输入Email">
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                    <div class="tab-pane fade" id="datalist">
-                        <br>
+                    <div class="tab-pane fade in active" id="datalist">
                         <table class="table table-bordered">
                             <thead>
                             <tr>
+                                <td>类型</td>
                                 <td>名称</td>
                                 <td>电话</td>
                                 <td>传真</td>
@@ -69,8 +28,46 @@
                                 <td>操作</td>
                             </tr>
                             </thead>
-                            <tbody id="datalistbody"></tbody>
+                            <tbody id="sponsorslist"></tbody>
                         </table>
+                    </div>
+                    <div class="tab-pane fade" id="new">
+                        <form id="add-form" class="form-horizontal" role="form" enctype="multipart/form-data">
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label"><span style="color: red;">*&nbsp;&nbsp;&nbsp;&nbsp;</span>类型</label>
+                                <div class="col-sm-10">
+                                    <select id="sponsors-type">
+                                        <option value='sponsors'>主办方</option>
+                                        <option value='undertakers'>承办方</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">名称</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control hide" id="new-_id">
+                                    <input type="text" class="form-control" id="sponsors-name" placeholder="请输入广告名称">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">电话</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" id="sponsors-tel" placeholder="请输入联系电话">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">传真</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" id="sponsors-fax" placeholder="请输入传真">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Email</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" id="sponsors-email" placeholder="请输入Email">
+                                </div>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -86,15 +83,79 @@
     </div><!-- /.modal-content -->
 </div><!-- /.modal -->
 <script id="sponsors-list-template" type="text/x-handlebars-template">
-    {{#each this.list}}
+    {{#each this.sponsors}}
     <tr>
+        <td>主办方</td>
         <td>{{name}}</td>
         <td>{{tel}}</td>
         <td>{{fax}}</td>
         <td>{{Email}}</td>
         <td>
-            <span class="glyphicon glyphicon-minus"/></a>
+            <a onclick="removeSponsors('{{_id}}','sponsors')"><span class="glyphicon glyphicon-minus"/></a>
         </td>
     </tr>
     {{/each}}
+    {{#each this.undertakers}}
+    <tr>
+        <td>承办方</td>
+        <td>{{name}}</td>
+        <td>{{tel}}</td>
+        <td>{{fax}}</td>
+        <td>{{Email}}</td>
+        <td>
+            <a onclick="removeSponsors('{{_id}}','undertakers')"><span class="glyphicon glyphicon-minus"/></a>
+        </td>
+    </tr>
+    {{/each}}
+</script>
+<script>
+    var currfairId;
+    function sponsors(fairId){
+        currfairId=fairId;
+        $.ajax({
+            type : "GET",
+            url : "/fair/findOne",
+            data:{
+                id:fairId
+            },
+            success: function(data) {
+                var obj = data;
+                if(obj.status=="200"){
+                    $('#sponsorslist').handlebars($('#sponsors-list-template'), obj.data);
+                }else{
+                    alert('加载失败。')
+                }
+            }
+        });
+    }
+    $('#sponsors-modal').on('hide', function() {
+        currfairId=null;
+    });
+    $('#sponsors-save-btn').on('click',function(){
+        $.get("/fair/addSponsor",
+                {
+                    fairId:currfairId,
+                    type:$('#sponsors-type').val(),
+                    sponsor: {
+                        name:$('#sponsors-name').val(),
+                        tel:$('#sponsors-tel').val(),
+                        fax:$('#sponsors-fax').val(),
+                        email:$('#sponsors-email').val()
+                    }
+                }, function(result){
+                    alert('添加成功')
+                    sponsors(currfairId)
+                });
+    })
+    function removeSponsors(id,type){
+        $.get("/fair/removeSponsor",
+                {
+                    fairId:currfairId,
+                    type:type,
+                    sponsorId: id
+                }, function(result){
+                    alert('删除成功')
+                    sponsors(currfairId)
+                });
+    }
 </script>

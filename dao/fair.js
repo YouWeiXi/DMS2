@@ -190,9 +190,9 @@ exports.addSponsor = function (id,type,sponsor,callback) {
  */
 exports.removeSponsor = function (id,type,sponsorId,callback) {
     var a={};
-    a[type]['_id']=sponsorId;
+    a[type]={
+            _id:sponsorId
+    };
     var update = {'$pull':a};
-    Fair.update({_id:id},update,{},function(err,docs){
-        callback(err,docs)
-    });
+    Fair.update({_id:id},update,{},callback);
 }
