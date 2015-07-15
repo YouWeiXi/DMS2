@@ -83,11 +83,12 @@ var TargetFairSchema = new Schema({
     lastYearInfo: { type: String, optional: true },
     website: { type: String, optional: true },
     logo: { type: String, label: "Fair Logo", optional: true },
-    advertisement: {
-        agent: [{ type: Schema.Types.ObjectId, ref: 'advertisement' }],
-        builder: [{ type: Schema.Types.ObjectId, ref: 'advertisement' }],
-        transport: [{ type: Schema.Types.ObjectId, ref: 'advertisement' }]
-    },
+//    advertisement: {
+//        agent: [{ type: Schema.Types.ObjectId, ref: 'advertisement' }],
+//        builder: [{ type: Schema.Types.ObjectId, ref: 'advertisement' }],
+//        transport: [{ type: Schema.Types.ObjectId, ref: 'advertisement' }]
+//    },
+    advertisement: { type: [Schema.Types.ObjectId], label: "Advertisement ID", optional: true },
     indexStr:{
         name:{ type: String, optional: true },
         sponsor:{ type: String, optional: true },

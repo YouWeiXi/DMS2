@@ -13,7 +13,7 @@ var AdSchema = new Schema({
     url: { type: String },
     pic: { type: String, label: "Advertisement Logo" },
     tags: { type: [String], optional: true },
-//    type: { type: String, allowedValues: ["agent", "builder", "transport"]},
+    type: { type: String },//, allowedValues: ["agent", "builder", "transport"]
     contact: { type: String, optional: true },
     tel: { type: String, optional: true },
     fax: { type: String, optional: true },

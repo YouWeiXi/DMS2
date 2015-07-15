@@ -26,12 +26,12 @@ var FairSchema = new Schema({
     lastYearInfo: { type: String, optional: true },
     website: { type: String, optional: true },
     logo: { type: String, label: "Fair Logo", optional: true },
-    advertisement: {
-        agent: [{ type: Schema.Types.ObjectId, ref: 'advertisement' }],
-        builder: [{ type: Schema.Types.ObjectId, ref: 'advertisement' }],
-        transport: [{ type: Schema.Types.ObjectId, ref: 'advertisement' }]
-    }
-//    advertisement: { type: [mongoose.Schema.Types.ObjectId], label: "Advertisement ID", optional: true }
+//    advertisement: {
+//        agent: [{ type: Schema.Types.ObjectId, ref: 'advertisement' }],
+//        builder: [{ type: Schema.Types.ObjectId, ref: 'advertisement' }],
+//        transport: [{ type: Schema.Types.ObjectId, ref: 'advertisement' }]
+//    }
+    advertisement: [{ type: Schema.Types.ObjectId , ref: 'advertisement'}]
 });
 var Fair = mongo.datasource.default.model("fair", FairSchema);
 
@@ -97,9 +97,7 @@ exports.findName = function (callback) {
 }
 exports.findOne = function (id,callback) {
     Fair.findOne({"_id": id})
-        .populate('advertisement.agent')
-        .populate('advertisement.builder')
-        .populate('advertisement.transport')
+        .populate('advertisement')
         .exec(callback)
 }
 /**
@@ -109,18 +107,15 @@ exports.findOne = function (id,callback) {
  * @param adId 广告id
  * @param callback
  */
-exports.addAd = function (id,type,adId,callback) {
-    var key='advertisement.'+type
-    var a={};
-    a[key]=adId
-    var update = {'$push':a};
+exports.addAd = function (id,adId,callback) {
+//    var key='advertisement.'+type
+//    var a={};
+//    a[key]=adId
+//    var update = {'$push':a};
+    var update = {'$push':{advertisement:adId}};
     Fair.update({_id:id},update,{},function(err,docs){
         callback(err,docs)
     });
-    //    Fair.findOne({"_id": id},  function(err, documents) {
-//        documents.advertisement[type].push(adId);
-//        documents.save(callback);
-//    })
 }
 /**
  * 移除指定展会内的指定广告
@@ -134,14 +129,16 @@ exports.removeAdByOne = function (id,type,adId,callback) {
 //        documents.advertisement[type].remove(adId);
 //        documents.save(callback);
 //    })
-    var a={};
-    if(type){
-        var key='advertisement.'+type
-        a[key]=adId
-    }else{
-        a={'advertisement.agent':adId, 'advertisement.builder':adId,'advertisement.transport':adId}
-    }
-    var update = {'$pull':a};
+
+//    var a={};
+//    if(type){
+//        var key='advertisement.'+type
+//        a[key]=adId
+//    }else{
+//        a={'advertisement.agent':adId, 'advertisement.builder':adId,'advertisement.transport':adId}
+//    }
+//    var update = {'$pull':a};
+    var update = {'$pull':{advertisement:adId}};
     Fair.update({_id:id},update,{},function(err,docs){
         callback(err,docs)
     });
@@ -153,19 +150,28 @@ exports.removeAdByOne = function (id,type,adId,callback) {
  * @param callback
  */
 exports.removeAdByAll = function (adId,callback) {
-    var q={'$or': [{'advertisement.agent':adId},{ 'advertisement.builder':adId},{'advertisement.transport':adId}]};
+//    var q={'$or': [{'advertisement.agent':adId},{ 'advertisement.builder':adId},{'advertisement.transport':adId}]};
+//    Fair.find(q,  function(err, docs) {
+//        docs.forEach(function(documents){
+//            documents.advertisement.agent.remove(adId);
+//            documents.advertisement.builder.remove(adId);
+//            documents.advertisement.transport.remove(adId);
+//            documents.save();
+//        })
+//        callback(err,{})
+//    })
+    var q={'advertisement':adId};
     Fair.find(q,  function(err, docs) {
         docs.forEach(function(documents){
-            documents.advertisement.agent.remove(adId);
-            documents.advertisement.builder.remove(adId);
-            documents.advertisement.transport.remove(adId);
+            documents.advertisement.remove(adId);
             documents.save();
         })
         callback(err,{})
     })
 }
 exports.findbyAd = function (adId,callback) {
-    var q={'$or': [{'advertisement.agent':adId},{ 'advertisement.builder':adId},{'advertisement.transport':adId}]};
+//    var q={'$or': [{'advertisement.agent':adId},{ 'advertisement.builder':adId},{'advertisement.transport':adId}]};
+    var q={'advertisement':adId};
     Fair.find(q,  callback)
 }
 /**

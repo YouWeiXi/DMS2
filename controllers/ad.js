@@ -38,7 +38,7 @@ var save=function(fields,res){
             return res.json(response.buildError(err.code));
         }
         //更新fair
-        fairDao.addAd(fields.fairId,fields.type,doc._id,function(err,doc){
+        fairDao.addAd(fields.fairId,doc._id,function(err,doc){
             if(err){
                 return res.json(response.buildError(err.code));
             }

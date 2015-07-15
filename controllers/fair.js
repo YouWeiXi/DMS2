@@ -164,7 +164,7 @@ exports.removeAd=function (req, res) {
 exports.addAd=function (req, res) {
     console.log(req.query)
     //更新fair内ad
-    fairDao.addAd(req.query.fairId,req.query.type,req.query.adId,function(err,doc){
+    fairDao.addAd(req.query.fairId,req.query.adId,function(err,doc){
         if(err){
             return res.json(response.buildError(err.code));
         }

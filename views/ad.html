@@ -44,27 +44,24 @@
     <div class="ad_edit"></div>
 </html>
 <script id="template" type="text/x-handlebars-template">
-    {{#each agent}}
-        <tr id="{{_id}}">
-            <td id="type{{_id}}" data-val="agent">代理公司</td>
-            {{>detail}}
-        </tr>
-    {{/each}}
-    {{#each builder}}
-        <tr id="{{_id}}">
-            <td id="type{{_id}}" data-val="builder">设计搭建公司</td>
-            {{>detail}}
-        </tr>
-    {{/each}}
-    {{#each transport}}
-        <tr id="{{_id}}">
-            <td id="type{{_id}}" data-val="transport">物流公司</td>
-            {{>detail}}
-        </tr>
+    {{#each this}}
+    <tr id="{{_id}}">
+        {{>detail}}
+    </tr>
     {{/each}}
 </script>
 <script id="list-template" type="text/x-handlebars-template">
-
+        <td>
+            {{#compare type "agent"}}
+                代理公司
+            {{/compare}}
+            {{#compare type "builder"}}
+                设计搭建公司
+            {{/compare}}
+            {{#compare type  "transport"}}
+                物流公司
+            {{/compare}}
+        </td>
         <td>
             {{#if pic}}
             <div class="col-xs-6 col-md-6">
