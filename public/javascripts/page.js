@@ -1,5 +1,5 @@
 var currPage=1;
-var length=5;//每页12条
+var length=10;//每页12条
 /**
  *
  * @param size 总页数 index 当前坐标
@@ -32,12 +32,12 @@ function page(size,callbackName,target){
 		if(currPage==1){
             str='<li class="active"><a href="#!" onclick="'+callbackName+'(1)">1</a></li>';
 		}else{
-            str='<l><a href="#!" onclick="'+callbackName+'(1)">1</a></li>';
+            str='<li><a href="#!" onclick="'+callbackName+'(1)">1</a></li>';
 		}
 		if(currPage==2){
-            str='<li class="active"><a href="#!" onclick="'+callbackName+'(2)">2</a></li>';
+            str+='<li class="active"><a href="#!" onclick="'+callbackName+'(2)">2</a></li>';
 		}else{
-            str='<li><a href="#!" onclick="'+callbackName+'(2)">2</a></li>';
+            str+='<li><a href="#!" onclick="'+callbackName+'(2)">2</a></li>';
 		}
 		if(currPage==1||currPage==2||currPage==(page-1)||currPage==page){
 			str+='<li><span>....</span></li>';

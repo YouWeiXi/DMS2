@@ -17,13 +17,20 @@
             return options.inverse(v1);
         }
     });
-    Handlebars.registerHelper("list_sub", function(list) {
+    Handlebars.registerHelper("slice", function(list) {
         if(list.length>2){
             return list[0]+' '+list[1]+' ... '
         }else if(list.length==2){
             return list[0]+' '+list[1]
         }else if(list.length==1){
             return list[0]
+        }
+    });
+    Handlebars.registerHelper("url_slice", function(website) {
+        if(website){
+            return website.split('.')[1];
+        }else{
+            return '';
         }
     });
 })(jQuery);

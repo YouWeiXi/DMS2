@@ -24,6 +24,7 @@ router.get('/adedit', function(req,res){res.render('ad_edit',{layout:false});});
 router.get('/adview', checkLogin);
 router.get('/adview', function(req,res){res.render('ad_view');});
 router.get('/fair_sponsors', function(req,res){res.render('fair_sponsors',{layout:false});});
+router.get('/fair_import', function(req,res){res.render('fair_import');});
 router.get('/sync', checkLogin);
 router.get('/sync', function(req,res){res.render('sync');});
 router.get('/logout', function(req,res){

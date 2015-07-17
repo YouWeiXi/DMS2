@@ -117,6 +117,8 @@ exports.import = function(req, res) {
                     var xlsObject = xlsx.parse(p);
 //                    console.log(JSON.parse(JSON.stringify(xlsObject[0].data)))
                     var data=xlsObject[0].data;
+                    var fairlist=[];
+                    var results=[];
                     for(var i= 1;i<data.length;i++){
                         var fair={
                             lastInfo:{},
@@ -172,12 +174,23 @@ exports.import = function(req, res) {
                                 fair[data[0][j]]=data[i][j];
                             }
                         }
-                        console.log(fair)
-                        fairDao.save(fair,function(err,list){
-                            console.log(err)
-                        });
+                        checkFair(fair,results,i)
+                        fairlist.push(fair);
                         if(i==data.length-1){
-                            res.json(response.buildOK());
+                            if(results.length>0){
+                                res.json(response.buildError(results));
+                            }else{
+                                fairlist.forEach(function(item,index){
+                                    fairDao.save(item,function(error,list){
+                                        if(error){
+                                            console.error(error+'-- '+list)
+                                        }
+                                    });
+                                    if(index==fairlist.length-1){
+                                        res.json(response.buildOK());
+                                    }
+                                })
+                            }
                         }
                     }
                 }
@@ -187,6 +200,18 @@ exports.import = function(req, res) {
         }
     });
 };
+var checkFair=function(fair,results,index){
+    if(fair.period){
+        if(fair.period<0||fair.period>10){
+            results.push('['+(index+1)+']'+'   period 为'+fair.period+'. 必须大于等于0 小于等于10')
+        }
+    }
+    if(fair.firstYear){
+        if(fair.firstYear<1600||fair.firstYear>2200){
+            results.push('['+(index+1)+']'+'   firstYear 为'+fair.firstYear+'. 必须大于1600 小于等于2200')
+        }
+    }
+}
 exports.findName=function (req, res) {
     fairDao.findName(function(err,list){
         if(err){

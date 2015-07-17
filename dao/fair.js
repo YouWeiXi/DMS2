@@ -17,7 +17,7 @@ var FairSchema = new Schema({
     engName: { type: String },
     time: { type: String },
     position: { type: String },
-    period: { type: Number, min: 0, max: 5, optional: true },
+    period: { type: Number, min: 0, max: 10, optional: true },
     firstYear: { type: Number, min: 1600, max: 2200, optional: true },
     hallName: { type: String, optional: true },
     sponsors: { type: [SponsorSchema], optional: true },
@@ -33,11 +33,10 @@ var FairSchema = new Schema({
 //    }
     advertisement: [{ type: Schema.Types.ObjectId , ref: 'advertisement'}],
     lastInfo:{
-        exhibitionNum:Number,
-        audienceNum:Number,
-        fairArea:Number
+        exhibitionNum:String,
+        audienceNum:String,
+        fairArea:String
     },
-    period:Number,
     status:{type:Number , default:0}// 0：未审核 1：审核通过 2：审核失败 3：已同步
 });
 var Fair = mongo.datasource.default.model("fair", FairSchema);
@@ -46,19 +45,13 @@ exports.Fair=Fair;
 
 exports.save = function (obj,callback) {
     var obj = new Fair(obj);
-    obj.save(function(err){
-        console.log(err)
-        if (err) {
-            callback(err)
-        }
-        callback()
-    });
+    obj.save(callback);
 }
 exports.find = function (param,callback) {
     createQuery(param).count(function (err, count) {
         var page=param.page?param.page:1;
         var query=createQuery(param);
-        var limit=param.limit?param.limit:15;
+        var limit=param.limit?param.limit:10;
         var skip=(page-1)*limit;
         query.skip(skip);
         query.limit(limit);
@@ -92,13 +85,11 @@ exports. update = function (obj,callback) {
 }
 exports.remove = function (query,callback) {
     Fair.remove(query,function(err,docs){
-        console.log(docs);
         callback(err,docs)
     });
 }
 exports.findName = function (callback) {
     Fair.find({}, '_id chnName engName', function (err, docs) {
-        console.log(docs)
         callback(err,docs)
     })
 }

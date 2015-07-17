@@ -1,0 +1,53 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<div class="container">
+    <ol class="breadcrumb">
+        <li><a href="./">首页</a></li>
+        <li><a href="./fair">展会管理</a></li>
+        <li class="active">导入</li>
+    </ol>
+    <div class="modal-body">
+        <form id="import-form" class="form-horizontal" role="form" enctype="multipart/form-data">
+            <div class="form-group">
+                <label class="col-sm-3 control-label">文件（*.xlsx）</label>
+                <div class="col-sm-8">
+                    <input type="file"  name="uploadfile" id="uploadfile"/>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" onclick="location.href='./fair'">
+            返回
+        </button>
+        <button type="button" class="btn btn-primary" id="upload-btn">
+            上传
+        </button>
+    </div>
+    <div>
+        结果:
+        <div id="result">
+            aaa
+        </div>
+    </div>
+</div>
+<script>
+    $('#upload-btn').on('click',function(){
+        var formdata = new FormData($("#import-form")[0]);
+        $.ajax({
+            type:'POST',
+            url: '/fair/import',
+            data:formdata,
+            processData: false,
+            contentType: false,
+            success: function(data){
+                if(data.status==200){
+                    alert("导入成功");
+                    $('#result').html('导入成功')
+                }else{
+                    $('#result').html(data.message.join("<br/>"))
+                }
+            }
+        })
+    })
+</script>
+</html>
