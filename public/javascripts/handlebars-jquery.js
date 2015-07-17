@@ -17,4 +17,13 @@
             return options.inverse(v1);
         }
     });
+    Handlebars.registerHelper("list_sub", function(list) {
+        if(list.length>2){
+            return list[0]+' '+list[1]+' ... '
+        }else if(list.length==2){
+            return list[0]+' '+list[1]
+        }else if(list.length==1){
+            return list[0]
+        }
+    });
 })(jQuery);

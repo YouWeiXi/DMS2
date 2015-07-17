@@ -31,7 +31,14 @@ var FairSchema = new Schema({
 //        builder: [{ type: Schema.Types.ObjectId, ref: 'advertisement' }],
 //        transport: [{ type: Schema.Types.ObjectId, ref: 'advertisement' }]
 //    }
-    advertisement: [{ type: Schema.Types.ObjectId , ref: 'advertisement'}]
+    advertisement: [{ type: Schema.Types.ObjectId , ref: 'advertisement'}],
+    lastInfo:{
+        exhibitionNum:Number,
+        audienceNum:Number,
+        fairArea:Number
+    },
+    period:Number,
+    status:{type:Number , default:0}// 0：未审核 1：审核通过 2：审核失败 3：已同步
 });
 var Fair = mongo.datasource.default.model("fair", FairSchema);
 

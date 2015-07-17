@@ -24,12 +24,11 @@
                     <td>英文名</td>
                     <td>地点</td>
                     <td>时间</td>
-                    <td>首期年份</td>
+                    <td>成立年份</td>
                     <td>展馆名称</td>
-                    <td>主办方</td>
-                    <td>承办方</td>
                     <td>分类</td>
                     <td>网址</td>
+                    <td>状态</td>
                     <th>操作</th>
                 </tr>
             </thead>
@@ -96,9 +95,9 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-2 control-label">首期年份</label>
+                            <label class="col-sm-2 control-label">成立年份</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" id="firstYear" placeholder="请输入首期年份">
+                                <input type="text" class="form-control" id="firstYear" placeholder="请输入成立年份">
                             </div>
                         </div>
                         <div class="form-group">
@@ -185,10 +184,18 @@
         <td id="time{{_id}}">{{time}}</td>
         <td id="firstYear{{_id}}">{{firstYear}}</td>
         <td id="hallName{{_id}}">{{hallName}}</td>
-        <td id="sponsor{{_id}}">{{sponsor}}</td>
-        <td id="undertaker{{_id}}">{{undertaker}}</td>
+        <!--<td id="sponsor{{_id}}">{{sponsor}}</td>
+        <td id="undertaker{{_id}}">{{undertaker}}</td>-->
         <td id="category{{_id}}">{{categories}}</td>
         <td id="website{{_id}}">{{website}}</td>
+        <td id="status{{_id}}">
+            {{#compare status 0}}
+                未审核
+            {{/compare}}
+            {{#compare status 1}}
+                审核通过
+            {{/compare}}
+        </td>
         <td>
             <a onclick="sponsors('{{_id}}')"><span class="glyphicon glyphicon-user" data-toggle="modal" data-target="#sponsors-modal"/></a>&nbsp;&nbsp;&nbsp;&nbsp;
             <a onclick="ad('{{_id}}')"><span class="glyphicon glyphicon-pencil"/></a>&nbsp;&nbsp;&nbsp;&nbsp;

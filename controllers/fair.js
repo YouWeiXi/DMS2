@@ -115,13 +115,64 @@ exports.import = function(req, res) {
                     return res.json(response.buildError('Something went wrong!'));
                 } else {
                     var xlsObject = xlsx.parse(p);
-                    console.log(JSON.parse(JSON.stringify(xlsObject[0].data)))
+//                    console.log(JSON.parse(JSON.stringify(xlsObject[0].data)))
                     var data=xlsObject[0].data;
                     for(var i= 1;i<data.length;i++){
-                        var fair={};
+                        var fair={
+                            lastInfo:{},
+                            sponsors:[],
+                            undertakers:[],
+                            categories:[]
+                        };
                         for(var j=0;j<data[0].length;j++){
-                            fair[data[0][j]]=data[i][j];
+                            if(data[i][j]==null||data[i][j]==''){
+                                continue;
+                            }
+                            if(data[0][j]=='lastInfo'){
+                                var lastInfo=data[i][j].split('|');
+                                if(lastInfo[0]!=''&&lastInfo[0]!=undefined){
+                                    fair.lastInfo.exhibitionNum=lastInfo[0];
+                                }
+                                if(lastInfo[1]!=''&&lastInfo[1]!=undefined) {
+                                    fair.lastInfo.audienceNum = lastInfo[1];
+                                }
+                                if(lastInfo[2]!=''&&lastInfo[2]!=undefined) {
+                                    fair.lastInfo.fairArea = lastInfo[2];
+                                }
+                            }else if(data[0][j]=='category'){
+                                if(data[i][j])
+                                var category=data[i][j].split('$');
+                                for(var m in category){
+                                    fair.categories.push(category[m]);
+                                }
+                            }else if(data[0][j]=='sponsor'||data[0][j]=='undertaker'){
+                                var array=data[i][j].split('|');
+                                for(var m in array){
+                                    var values=array[m].split('$');
+                                    var a={};
+                                    if(values[0]!=''&&values[0]!=undefined) {
+                                        a.name=values[0]
+                                    }
+                                    if(values[1]!=''&&values[1]!=undefined) {
+                                        a.tel=values[1]
+                                    }
+                                    if(values[2]!=''&&values[2]!=undefined) {
+                                        a.fax=values[2]
+                                    }
+                                    if(values[3]!=''&&values[3]!=undefined) {
+                                        a.email=values[3]
+                                    }
+                                    if(data[0][j]=='undertaker'){
+                                        fair.undertakers.push(a);
+                                    }else{
+                                        fair.sponsors.push(a);
+                                    }
+                                }
+                            }else{
+                                fair[data[0][j]]=data[i][j];
+                            }
                         }
+                        console.log(fair)
                         fairDao.save(fair,function(err,list){
                             console.log(err)
                         });
