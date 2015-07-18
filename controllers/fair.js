@@ -273,3 +273,11 @@ exports.removeSponsor=function (req, res) {
         res.json(response.buildOK());
     });
 };
+exports.audit=function (req, res) {
+    fairDao.update(req.query,function(err,doc){
+        if(err){
+            return res.json(response.buildError(err.code));
+        }
+        res.json(response.buildOK());
+    });
+};

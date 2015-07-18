@@ -52,6 +52,7 @@ router.get('/fair/addAd', fair.addAd);
 router.get('/fair/byAd', fair.byAd);
 router.get('/fair/addSponsor', fair.addSponsor);
 router.get('/fair/removeSponsor', fair.removeSponsor);
+router.get('/fair/audit', fair.audit);
 
 router.post('/user/reg', user.reg);
 router.post('/user/login', user.login);
