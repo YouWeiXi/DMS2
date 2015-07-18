@@ -67,12 +67,14 @@ exports.find = function (param,callback) {
 }
 var createQuery = function(param){
     var query = null;
+    var arg={};
     if(param.search){
         var regex = new RegExp(param.search, 'i');
-        query = Fair.find({'$or': [{chnName: regex},{engName:regex},{position:regex},{time:regex}]});
-    }else{
-        query = Fair.find({});
+        arg={'$or': [{chnName: regex},{engName:regex},{position:regex},{time:regex}]}
+    }else if(param.status){
+        arg.status=param.status;
     }
+    query = Fair.find(arg);
     return query;
 }
 exports. update = function (obj,callback) {

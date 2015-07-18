@@ -13,7 +13,7 @@ exports.save=function (req, res) {
     form.multiples = true;
     // Parse file.
     form.parse(req, function(err, fields, files) {
-        fields.categories=fields.category.split(' ');
+        fields.categories=fields.category.split(',');
         var file=files.logofile;
         if(file) {
             util.handleUpload(file,function(err,name){
@@ -58,7 +58,7 @@ exports.update=function (req, res) {
     form.multiples = true;
     // Parse file.
     form.parse(req, function(err, fields, files) {
-        fields.categories=fields.category.split(' ');
+        fields.categories=fields.category.split(',');
         var file=files.logofile;
         if(file) {
             util.handleUpload(file,function(err,name){
@@ -201,6 +201,15 @@ exports.import = function(req, res) {
     });
 };
 var checkFair=function(fair,results,index){
+    if(!fair.chnName||fair.chnName==''){
+        results.push('['+(index+1)+']'+'   chnName 不能为空')
+    }
+    if(!fair.time||fair.time==''){
+        results.push('['+(index+1)+']'+'   time 不能为空')
+    }
+    if(!fair.position||fair.position==''){
+        results.push('['+(index+1)+']'+'   position 不能为空')
+    }
     if(fair.period){
         if(fair.period<0||fair.period>10){
             results.push('['+(index+1)+']'+'   period 为'+fair.period+'. 必须大于等于0 小于等于10')
