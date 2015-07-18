@@ -221,6 +221,9 @@
             {{#compare status 1}}
                 审核通过
             {{/compare}}
+            {{#compare status 2}}
+                审核失败
+            {{/compare}}
         </td>
         <td>
             <a onclick="sponsors('{{_id}}')" title="主办方/承办方管理"><span class="glyphicon glyphicon-user" data-toggle="modal" data-target="#sponsors-modal"/></a>&nbsp;&nbsp;&nbsp;&nbsp;
@@ -368,6 +371,7 @@
                     _id:audit_curr_fairId,
                     status: 1
                 }, function(result){
+                    $('#status'+audit_curr_fairId).html('审核通过')
                     $("#audit").modal("hide")
                 });
     });
@@ -377,6 +381,7 @@
                     _id:audit_curr_fairId,
                     status: 2
                 }, function(result){
+                    $('#status'+audit_curr_fairId).html('审核失败')
                     $("#audit").modal("hide")
                 });
     });
