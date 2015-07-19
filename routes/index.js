@@ -33,6 +33,7 @@ router.get('/logout', function(req,res){
 });
 /* 数据同步 */
 router.get('/onSync', sync.sync);
+router.get('/syncOne', sync.syncOne);
 router.get('/setting/datasource', sync.setting);
 router.get('/getDatasource', sync.getDatasource);
 /* 数据同步 end */

@@ -165,32 +165,6 @@
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal -->
-    <div class="modal fade" style="width: auto" id="audit" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog" style="width: 300px">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close"
-                            data-dismiss="modal" aria-hidden="true">
-                        &times;
-                    </button>
-                    <h4 class="modal-title">
-                        审核
-                    </h4>
-                </div>
-                <div class="modal-body">
-                    <button type="button" class="btn btn-danger" id="audit-success-btn">
-                        通过
-                    </button>
-                    <button type="button" class="btn btn-primary" id="audit-fail-btn">
-                        失败
-                    </button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">
-                        关闭
-                    </button>
-                </div>
-            </div>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal -->
 </html>
 <script id="list-template" type="text/x-handlebars-template">
     {{#each data.list}}
@@ -228,7 +202,6 @@
         <td>
             <a onclick="sponsors('{{_id}}')" title="主办方/承办方管理"><span class="glyphicon glyphicon-user" data-toggle="modal" data-target="#sponsors-modal"/></a>&nbsp;&nbsp;&nbsp;&nbsp;
             <a onclick="ad('{{_id}}')" title="广告管理"><span class="glyphicon glyphicon-pencil"/></a>&nbsp;&nbsp;&nbsp;&nbsp;
-            <a onclick="audit('{{_id}}')" title="审核"><span class="glyphicon glyphicon-stats" data-toggle="modal" data-target="#audit"/></a>&nbsp;&nbsp;&nbsp;&nbsp;
             <a onclick="edit('{{_id}}')" title="修改"><span class="glyphicon glyphicon-edit" data-toggle="modal" data-target="#edit"/></a>&nbsp;&nbsp;&nbsp;&nbsp;
             <a onclick="del('{{_id}}')" title="删除"><span class="glyphicon glyphicon-remove"/></a>
         </td>
@@ -357,32 +330,5 @@
         var src = window.URL.createObjectURL(f);
         $('#previewdiv').addClass('show')
         $('#preview').attr('src',src);
-    });
-    var audit_curr_fairId;
-    function audit(id){
-        audit_curr_fairId=id;
-    }
-    $('#audit').on('hide', function() {
-        audit_curr_fairId=null;
-    });
-    $('#audit-success-btn').on('click', function() {
-        $.get("/fair/audit",
-                {
-                    _id:audit_curr_fairId,
-                    status: 1
-                }, function(result){
-                    $('#status'+audit_curr_fairId).html('审核通过')
-                    $("#audit").modal("hide")
-                });
-    });
-    $('#audit-fail-btn').on('click', function() {
-        $.get("/fair/audit",
-                {
-                    _id:audit_curr_fairId,
-                    status: 2
-                }, function(result){
-                    $('#status'+audit_curr_fairId).html('审核失败')
-                    $("#audit").modal("hide")
-                });
     });
 </script>

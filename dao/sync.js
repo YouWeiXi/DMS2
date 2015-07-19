@@ -53,6 +53,30 @@ function syncAd(cb){
         })
     });
 }
+exports.syncOne=function(id,cb){
+    var FromObj = fair.Fair;
+    var TargetObj = mongo.datasource.product.model("fair", TargetFairSchema);
+    var TargetAdObj = mongo.datasource.product.model("advertisement", ad.AdSchema);
+    FromObj.findOne({"_id": id})
+        .populate('advertisement')
+        .exec(function (err, doc) {
+            if(err){
+                return cb(err)
+            }
+            console.log(doc)
+            if(doc.hasOwnProperty('hasOwnProperty')){
+                doc.advertisement.forEach(function(ad){
+                    var adobj = new TargetAdObj(ad);
+                    adobj.save();
+                })
+            }
+            doc = wrapFair(doc);
+            var obj = new TargetObj(doc);
+            obj.save(function(err){
+                cb()
+            });
+        })
+}
 function wrapFair(doc){
     var aFair=doc.toJSON();
     aFair.indexStr = {};

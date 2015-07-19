@@ -72,8 +72,18 @@ var createQuery = function(param){
         var regex = new RegExp(param.search, 'i');
         arg={'$or': [{chnName: regex},{engName:regex},{position:regex},{time:regex}]}
     }else if(param.status){
-        arg.status=param.status;
+        if(typeof param.status == "string"){
+            arg.status=param.status;
+        }else{
+            if(!arg.$or){
+                arg.$or=[];
+            }
+            param.status.forEach(function(item){
+                arg.$or.push({status:item});
+            })
+        }
     }
+    console.log(JSON.stringify(arg))
     query = Fair.find(arg);
     return query;
 }

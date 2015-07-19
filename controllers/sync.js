@@ -39,3 +39,11 @@ exports.sync=function (req, res) {
         res.json(response.buildOK());
     })
 };
+exports.syncOne=function (req, res) {
+    syncDao.syncOne(req.query.id,function(err){
+        if(err){
+            return res.json(response.buildError(err));
+        }
+        res.json(response.buildOK());
+    })
+};
