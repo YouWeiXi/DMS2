@@ -11,7 +11,10 @@ var AdSchema = new Schema({
     fair:{type: mongoose.Schema.Types.ObjectId, label: "Fair ID", optional: true},
     name: { type: String },
     url: { type: String },
-    pic: { type: String, label: "Advertisement Logo" },
+    pic: {
+        small:String,
+        big:String
+    },
     tags: { type: [String], optional: true },
     type: { type: String },//, allowedValues: ["agent", "builder", "transport"]
     contact: { type: String, optional: true },

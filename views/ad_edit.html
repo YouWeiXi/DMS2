@@ -31,13 +31,24 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-2 control-label">Logo</label>
+                                <label class="col-sm-2 control-label">Logo 小图</label>
                                 <div class="col-sm-10">
-                                    <input type="file"  name="ad-new-logofile" id="ad-new-logofile"/>
+                                    <input type="file"  name="ad-new-logofile-small" id="ad-new-logofile-small"/>
                                 </div>
-                                <div id="ad-new-previewdiv" class="col-xs-6 col-md-3 hide">
+                                <div id="ad-new-previewdiv-small" class="col-xs-6 col-md-3 hide">
                                     <a href="#" class="thumbnail">
-                                        <img id="ad-new-preview" src=""  alt="">
+                                        <img id="ad-new-preview-small" src=""  alt="">
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Logo 大图</label>
+                                <div class="col-sm-10">
+                                    <input type="file"  name="ad-new-logofile-big" id="ad-new-logofile-big"/>
+                                </div>
+                                <div id="ad-new-previewdiv-big" class="col-xs-6 col-md-3 hide">
+                                    <a href="#" class="thumbnail">
+                                        <img id="ad-new-preview-big" src=""  alt="">
                                     </a>
                                 </div>
                             </div>
@@ -152,13 +163,24 @@
             <div class="modal-body">
                 <form id="edit-form" class="form-horizontal" role="form" enctype="multipart/form-data">
                     <div class="form-group">
-                        <label class="col-sm-2 control-label">Logo</label>
+                        <label class="col-sm-2 control-label">Logo 小图</label>
                         <div class="col-sm-10">
-                            <input type="file"  name="ad-edit-logofile" id="ad-edit-logofile"/>
+                            <input type="file"  name="ad-edit-logofile-small" id="ad-edit-logofile-small"/>
                         </div>
-                        <div id="ad-edit-previewdiv" class="col-xs-6 col-md-3 hide">
+                        <div id="ad-edit-previewdiv-small" class="col-xs-6 col-md-3 hide">
                             <a href="#" class="thumbnail">
-                                <img id="ad-edit-preview" src=""  alt="">
+                                <img id="ad-edit-preview-small" src=""  alt="">
+                            </a>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Logo 大图</label>
+                        <div class="col-sm-10">
+                            <input type="file"  name="ad-edit-logofile-big" id="ad-edit-logofile-big"/>
+                        </div>
+                        <div id="ad-edit-previewdiv-big" class="col-xs-6 col-md-3 hide">
+                            <a href="#" class="thumbnail">
+                                <img id="ad-edit-preview-big" src=""  alt="">
                             </a>
                         </div>
                     </div>
@@ -281,7 +303,7 @@
             {{#if pic}}
             <div style="width:100px;heigh:100px">
                 <a href="#" class="thumbnail">
-                    <img src="/user_data/{{pic}}">
+                    <img src="/user_data/{{pic.small}}">
                 </a>
             </div>
             {{/if}}
@@ -383,11 +405,17 @@
             }
         });
     }
-    $('#ad-new-logofile').on('change', function() {
-        preview('ad-new-')
+    $('#ad-new-logofile-small').on('change', function() {
+        preview('ad-new-','-small')
     });
-    $('#ad-edit-logofile').on('change', function() {
-        preview('ad-edit-')
+    $('#ad-edit-logofile-small').on('change', function() {
+        preview('ad-edit-','-small')
+    });
+    $('#ad-new-logofile-big').on('change', function() {
+        preview('ad-new-','-big')
+    });
+    $('#ad-edit-logofile-big').on('change', function() {
+        preview('ad-edit-','-big')
     });
     $('#new-modal').on('hide', function() {
         clear('new-')
@@ -407,15 +435,18 @@
         $('#'+prefix+'qq').val('');
 
         //清空图片
-        $('#ad-'+prefix+'-logofile').val('');
-        $('#ad-'+prefix+'previewdiv').removeClass('show')
-        $('#ad-'+prefix+'preview').attr('src','');
+        $('#ad-'+prefix+'-logofile-big').val('');
+        $('#ad-'+prefix+'previewdiv-big').removeClass('show')
+        $('#ad-'+prefix+'preview-big').attr('src','');
+        $('#ad-'+prefix+'-logofile-small').val('');
+        $('#ad-'+prefix+'previewdiv-small').removeClass('show')
+        $('#ad-'+prefix+'preview-small').attr('src','');
     }
-    function preview(prefix){
-        var f = document.getElementById(prefix+"logofile").files[0];
+    function preview(prefix,suffix){
+        var f = document.getElementById(prefix+"logofile"+suffix).files[0];
         var src = window.URL.createObjectURL(f);
-        $('#'+prefix+'previewdiv').addClass('show')
-        $('#'+prefix+'preview').attr('src',src);
+        $('#'+prefix+'previewdiv'+suffix).addClass('show')
+        $('#'+prefix+'preview'+suffix).attr('src',src);
     }
     function updateFairAd(adId){
         $.get("/fair/addAd",{adId:adId,fairId:fairId,type:$('#new-type').val()}, function(result){

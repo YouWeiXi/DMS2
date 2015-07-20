@@ -13,17 +13,28 @@ exports.save=function (req, res) {
     // Parse file.
     form.parse(req, function(err, fields, files) {
         if(files.adlogofile) {
-            var file=files['ad-new-logofile'];
-            util.handleUpload(file,function(err,name){
+            var smallfile=files['ad-new-logofile-small'];
+            var bigfile=files['ad-new-logofile-big'];
+            util.handleUpload(smallfile,function(err,smallname){
                 if (err) {
                     return res.json(response.buildError('Something went wrong!'));
                 } else {
-                    if(fields){
-                        if(name!=null) {
-                            fields.pic = name;
-                        }
-                        save(fields,res)
+                    fields.pic={};
+                    if(smallname!=null) {
+                        fields.pic.small=smallname;
                     }
+                    util.handleUpload(bigfile,function(err,bigname){
+                        if (err) {
+                            return res.json(response.buildError('Something went wrong!'));
+                        } else {
+                            if(fields){
+                                if(bigname!=null) {
+                                    fields.pic.big=bigname;
+                                }
+                                save(fields,res)
+                            }
+                        }
+                    })
                 }
             })
         } else {
@@ -61,7 +72,7 @@ exports.update=function (req, res) {
     // Parse file.
     form.parse(req, function(err, fields, files) {
         if(files) {
-            var file=files['ad-edit-logofile'];
+           /* var file=files['ad-edit-logofile'];
             util.handleUpload(file,function(err,name){
                 if (err) {
                     return res.json(response.buildError('Something went wrong!'));
@@ -78,6 +89,36 @@ exports.update=function (req, res) {
                             res.json(response.buildOK());
                         });
                     }
+                }
+            })*/
+            var smallfile=files['ad-edit-logofile-small'];
+            var bigfile=files['ad-edit-logofile-big'];
+            util.handleUpload(smallfile,function(err,smallname){
+                if (err) {
+                    return res.json(response.buildError('Something went wrong!'));
+                } else {
+                    fields.pic={};
+                    if(smallname!=null) {
+                        fields.pic.small=smallname;
+                    }
+                    util.handleUpload(bigfile,function(err,bigname){
+                        if (err) {
+                            return res.json(response.buildError('Something went wrong!'));
+                        } else {
+                            if(fields){
+                                if(bigname!=null) {
+                                    fields.pic.big=bigname;
+                                }
+                                adDao.update(fields,function(err,list){
+                                    if(err){
+                                        console.log(err)
+                                        return res.json(response.buildError(err));
+                                    }
+                                    res.json(response.buildOK());
+                                });
+                            }
+                        }
+                    })
                 }
             })
         } else {
