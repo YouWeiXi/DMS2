@@ -57,7 +57,7 @@
                     </h4>
                 </div>
                 <div class="modal-body">
-                    <form id="add-form" class="form-horizontal" role="form" enctype="multipart/form-data">
+                    <form id="add-fair-form" class="form-horizontal" role="form" enctype="multipart/form-data">
                         <div class="form-group">
                             <label class="col-sm-2 control-label">Logo</label>
                             <div class="col-sm-10">
@@ -281,7 +281,7 @@
         }else{
             $('#modalLabel').html('添加')
         }
-        var formdata = new FormData($("#add-form")[0]);
+        var formdata = new FormData($("#add-fair-form")[0]);
         for(var k in param){
             formdata.append(k, param[k]);
         }
