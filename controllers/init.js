@@ -7,7 +7,15 @@ exports.init=function (req, res) {
     var  md5 = crypto.createHash('md5');
     var  password = md5.update('admin').digest('base64');
     roleDao.save({
-        roleName: '超级管理员'
+        roleName: '超级管理员',
+        value:[
+            {label:'展会管理',href:'/fair'},
+            {label:'广告管理',href:'/adview'},
+            {label:'个人中心',href:'/personal'},
+            {label:'同步',href:'/sync'},
+            {label:'角色管理',href:'/role'},
+            {label:'用户管理',href:'/user'}
+        ]
     }, function (err, doc) {
         console.log(doc)
         userDao.save({

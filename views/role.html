@@ -52,6 +52,19 @@
                                 <input type="text" class="form-control" id="roleName" placeholder="请输入名称">
                             </div>
                         </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">分配权限</label>
+                            <div class="col-sm-10">
+                                <select id="value" multiple class="form-control" style="height: 120px">
+                                    <option value="/fair">展会管理</option>
+                                    <option value="/adview">广告管理</option>
+                                    <option value="/personal">个人中心</option>
+                                    <option value="/sync">同步</option>
+                                    <option value="/role">角色管理</option>
+                                    <option value="/user">用户管理</option>
+                                </select>
+                            </div>
+                        </div>
                     </form>
                 </div>
                 <div class="modal-footer">
@@ -114,16 +127,56 @@
         $('#modalLabel').html('更新')
         $('#_id').val(id);
         $('#roleName').val($('#roleName'+id).html());
+
+        $.ajax({
+            type : "GET",
+            url : "/role/findOne",
+            data:{id:id},
+            success: function(data) {
+                var obj = data;
+                if(obj.status=="200"){
+                    console.log(obj)
+                    var vv=obj.data.value;
+                    $('#value').children().each(function(){
+                        for(var i in vv){
+//                            $(this).removeAttr('selected')
+                            console.log($(this).attr('value')==vv[i].href)
+                            if($(this).attr('value')==vv[i].href){
+                                console.log($(this).attr('value')+'     '+vv[i].href)
+                                $(this).attr('selected','selected');
+                            }
+                        }
+                    });
+                }else{
+                    alert('加载失败。')
+                }
+            }
+        });
     }
     $('#search-btn').on('click',function(){
         loadPage(1,$('#search').val())
     })
     $('#save-btn').on('click',function(){
+        if($('#roleName').val()==''){
+            return alert('名称不能为空')
+        }
+        var value=[]
+        $("#value option:selected").each(function(){
+            value.push({
+                label:$(this).text(),
+                href:$(this).val()
+            })
+        });
+        if(value.length==0){
+            return alert('请分配权限')
+        }
         var id=$('#_id').val();
         var url='/role/save';
         var param={
-            roleName:$('#roleName').val()
+            roleName:$('#roleName').val(),
+            value:JSON.stringify(value)
         };
+        console.log(param)
         if(id){
             url='/role/update';
             param._id=id;

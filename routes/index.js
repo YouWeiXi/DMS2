@@ -61,6 +61,7 @@ router.get('/user/find', user.find);
 router.post('/user/update', user.update);
 router.get('/user/remove', user.remove);
 
+router.get('/role/findOne', role.findOne);
 router.post('/role/save', role.save);
 router.post('/role/update', role.update);
 router.get('/role/find', role.find);

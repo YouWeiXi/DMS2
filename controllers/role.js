@@ -6,6 +6,7 @@ var response = require('../common/response');
 var path 	   = require('path');
 var config = require('../config').config;
 exports.save=function (req, res) {
+    req.body.value=JSON.parse(req.body.value)
     roleDao.save(req.body,function(err,list){
         if(err){
             return res.json(response.buildError(err.code));
@@ -22,6 +23,7 @@ exports.find=function (req, res) {
     });
 };
 exports.update=function (req, res) {
+    req.body.value=JSON.parse(req.body.value)
     roleDao.update(req.body,function(err,list){
         if(err){
             console.log(err)
@@ -36,5 +38,13 @@ exports.remove=function (req, res) {
             return res.json(response.buildError(err.code));
         }
         res.json(response.buildOK());
+    });
+};
+exports.findOne=function (req, res) {
+    roleDao.findOne(req.query.id,function(err,list){
+        if(err){
+            return res.json(response.buildError(err.code));
+        }
+        res.json(response.buildOK(list));
     });
 };

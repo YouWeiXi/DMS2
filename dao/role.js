@@ -6,9 +6,13 @@ var mongo = require('./template/mongodb');
 var Schema = mongoose.Schema,
     ObjectId = Schema.ObjectId;
 
-
+var AuthSchema = new Schema({
+    label: { type: String },
+    href: { type: String }
+});
 var RoleSchema = new Schema({
-    roleName: { type: String }
+    roleName: { type: String },
+    value: { type: [AuthSchema] }
 });
 
 var Role = mongo.datasource.default.model("role", RoleSchema);
@@ -58,4 +62,7 @@ exports.remove = function (query,callback) {
         console.log(docs);
         callback(err,docs)
     });
+}
+exports.findOne = function (id,callback) {
+    Role.findOne({_id:id},callback);
 }
