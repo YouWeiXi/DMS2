@@ -90,6 +90,7 @@ var createQuery = function(param){
 exports. update = function (obj,callback) {
     var id=obj._id;
     delete obj._id;
+    obj.status = 0
     var update = { $set: obj}, options = {};
     Fair.update({_id:id},update,options,function(err,docs){
         callback(err,docs)
@@ -122,7 +123,7 @@ exports.addAd = function (id,adId,callback) {
 //    var a={};
 //    a[key]=adId
 //    var update = {'$push':a};
-    var update = {'$push':{advertisement:adId}};
+    var update = {'$push':{advertisement:adId},$set: {status:0}};
     Fair.update({_id:id},update,{},function(err,docs){
         callback(err,docs)
     });
@@ -148,7 +149,7 @@ exports.removeAdByOne = function (id,type,adId,callback) {
 //        a={'advertisement.agent':adId, 'advertisement.builder':adId,'advertisement.transport':adId}
 //    }
 //    var update = {'$pull':a};
-    var update = {'$pull':{advertisement:adId}};
+    var update = {'$pull':{advertisement:adId},$set: {status:0}};
     Fair.update({_id:id},update,{},function(err,docs){
         callback(err,docs)
     });
@@ -174,6 +175,7 @@ exports.removeAdByAll = function (adId,callback) {
     Fair.find(q,  function(err, docs) {
         docs.forEach(function(documents){
             documents.advertisement.remove(adId);
+            documents.status = 0;
             documents.save();
         })
         callback(err,{})
@@ -194,7 +196,7 @@ exports.findbyAd = function (adId,callback) {
 exports.addSponsor = function (id,type,sponsor,callback) {
     var a={};
     a[type]=sponsor;
-    var update = {'$push':a};
+    var update = {'$push':a,$set: {status:0}};
     Fair.update({_id:id},update,{},callback);
 }
 /**
@@ -209,6 +211,6 @@ exports.removeSponsor = function (id,type,sponsorId,callback) {
     a[type]={
             _id:sponsorId
     };
-    var update = {'$pull':a};
+    var update = { '$pull':a , $set: { status : 0 } };
     Fair.update({_id:id},update,{},callback);
 }
