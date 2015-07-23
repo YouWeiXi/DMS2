@@ -64,7 +64,7 @@ exports.syncOne=function(id,cb){
                 return cb(err)
             }
             console.log(doc)
-            if(doc.hasOwnProperty('hasOwnProperty')){
+            if(doc.hasOwnProperty('advertisement')){
                 doc.advertisement.forEach(function(ad){
                     var adobj = new TargetAdObj(ad);
                     adobj.save();
