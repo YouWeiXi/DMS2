@@ -46,6 +46,7 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label">选择</label>
                             <div class="col-sm-10">
+                                <input type="text" class="form-control hide" id="_id">
                                 <select id="role_select" class="form-control">
                                 </select>
                             </div>
@@ -134,9 +135,9 @@
     $('#save-btn').on('click',function(){
         var id=$('#_id').val();
         var param={
-            roleName:$('#roleName').val()
+            role:$('#role_select').val()
         };
-        var url='/user/updateRole';
+        var url='/user/update';
         param._id=id;
         $.ajax({
             type:'POST',

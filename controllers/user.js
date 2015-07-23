@@ -50,10 +50,9 @@ exports.find=function (req, res) {
 exports.update=function (req, res) {
     userDao.update(req.body,function(err,list){
         if(err){
-            console.log(err)
             return res.json(response.buildError(err));
         }
-        res.json(response.buildOK());
+        res.json(response.buildOK(list));
     });
 };
 exports.remove=function (req, res) {
@@ -67,7 +66,9 @@ exports.remove=function (req, res) {
 exports.menu=function (req, res) {
     var items=[];
     if(req.session.user){
-        items=req.session.user.role.value
+        if(req.session.user.role){
+            items=req.session.user.role.value
+        }
     }
     res.json(response.buildOK(items));
 };

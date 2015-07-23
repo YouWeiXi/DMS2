@@ -25,9 +25,7 @@ exports.update = function (obj,callback) {
     var id=obj._id;
     delete obj._id;
     var update = { $set: obj}, options = {};
-    User.update({_id:id},update,options,function(err,docs){
-        callback(err,docs)
-    });
+    User.update({_id:id},update,options,callback);
 }
 exports.remove = function (query,callback) {
     User.remove(query,function(err,docs){
