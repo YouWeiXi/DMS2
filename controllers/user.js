@@ -34,6 +34,7 @@ exports.login=function (req, res) {
         if(err){
             return res.json(response.buildError(err));
         }
+        console.log(list)
         req.session.user = list;
         res.json(response.buildOK(list));
     });
@@ -66,14 +67,7 @@ exports.remove=function (req, res) {
 exports.menu=function (req, res) {
     var items=[];
     if(req.session.user){
-        items=[
-            {label:'展会管理',href:'/fair'},
-            {label:'广告管理',href:'/adview'},
-            {label:'个人中心',href:'/personal'},
-            {label:'审核及同步',href:'/sync'},
-            {label:'角色管理',href:'/role'},
-            {label:'用户管理',href:'/user'}
-        ]
+        items=req.session.user.role.value
     }
     res.json(response.buildOK(items));
 };

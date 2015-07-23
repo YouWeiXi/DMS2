@@ -19,9 +19,7 @@ exports.save = function (obj,callback) {
     obj.save(callback);
 }
 exports.login = function (param,callback) {
-    User.findOne(param,function (err, list) {
-        callback(err,list)
-    });
+    User.findOne(param).populate('role').exec(callback);
 }
 exports.update = function (obj,callback) {
     var id=obj._id;

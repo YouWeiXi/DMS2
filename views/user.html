@@ -45,9 +45,10 @@
                     <form id="add-form" class="form-horizontal" role="form">
                         <div class="form-group">
                             <label class="col-sm-2 control-label">选择</label>
-                            <select id="value" multiple class="form-control" style="height: 120px">
-
-                            </select>
+                            <div class="col-sm-10">
+                                <select id="role_select" class="form-control">
+                                </select>
+                            </div>
                         </div>
                     </form>
                 </div>
@@ -111,6 +112,21 @@
     function edit(id){
         $('#_id').val(id);
         $('#roleName').val($('#roleName'+id).html());
+        $.ajax({
+            type : "GET",
+            url : "/role/find",
+            data:{},
+            success: function(data) {
+                var obj = data;
+                if(obj.status=="200"){
+                    for(var i in obj.data.list){
+                        $("#role_select").append("<option value='"+obj.data.list[i]._id+"'>"+obj.data.list[i].roleName+"</option>");
+                    }
+                }else{
+                    alert('加载失败。')
+                }
+            }
+        });
     }
     $('#search-btn').on('click',function(){
         loadPage(1,$('#search').val())
