@@ -3,12 +3,12 @@
  */
 var path = require('path');
 exports.config = {
-    port: 5000,
-    upload_dir: path.join(__dirname, 'public', 'user_data'),
-    mongodb: {
-        url: 'mongodb://127.0.0.1:27017/fairs',
-        productUrl:'mongodb://127.0.0.1:27017/fairs_product'
-    }
+  port: 5000,
+  upload_dir: path.join(__dirname, 'public', 'user_data'),
+  mongodb: {
+    url: 'mongodb://123.57.75.184:15515/fairs',
+    productUrl:'mongodb://123.57.75.184:15515/fairs_product'
+  }
 };
 
 
